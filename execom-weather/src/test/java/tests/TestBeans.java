@@ -5,6 +5,7 @@ import main.entities.Administrator;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 
 import static org.mockito.Mockito.mock;
@@ -25,5 +26,9 @@ public class TestBeans {
     @Bean
     public Administrator getAdministratorMock() {
         return mock(Administrator.class);
+    }
+    
+    @Bean UserDetails getUserDetailsMock() {
+        return mock(UserDetails.class);
     }
 }

@@ -1,6 +1,5 @@
 package tests;
 
-import main.authentication.ConvertAdministrators;
 import main.authentication.UserDetailsServiceImpl;
 import main.database.AdministratorRepository;
 import main.entities.Administrator;
@@ -10,13 +9,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import static org.mockito.Matchers.anyString;
 
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,34 +30,32 @@ public class UserDetailsServiceImplTest {
         public UserDetailsServiceImpl getUserDetailsServiceImplInstance() {
             return new UserDetailsServiceImpl();
         }
-        
-        @Bean
-        public ConvertAdministrators getConvertAdministratorsMock() {
-            return mock(ConvertAdministrators.class);
-        }
     }
     
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
-    
-    @Autowired
-    private ConvertAdministrators convertAdmin;
    
     @Autowired
     private AdministratorRepository AdminRepo;
+    
+    @Autowired
+    private UserDetails userDetails;
     
     @Autowired
     private Administrator admin;
     
     @Test
     public void loadUserByUsernameTest1() {
-        when(AdminRepo.findByAdministratorUsername(anyString())).thenReturn(admin);
-        userDetailsServiceImpl.loadUserByUsername(anyString());
+        UserDetailsServiceImpl spy = spy(userDetailsServiceImpl);
         
-        verify(convertAdmin).convertAdmin(admin);
+        when(AdminRepo.findByAdministratorUsername(anyString())).thenReturn(admin);
+//        when(spy.loadUserByUsername(anyString())).thenReturn(userDetails);
+        spy.loadUserByUsername(anyString());
+        
+        verify(spy).convertAdmin(admin);
     }
     
-    @Test(expected=UsernameNotFoundException.class)
+    @Test(expected=NullPointerException.class)
     public void loadUserByUsernameTest2() {
         when(AdminRepo.findByAdministratorUsername(anyString())).thenReturn(null);
         userDetailsServiceImpl.loadUserByUsername(anyString());
