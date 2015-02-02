@@ -10,4 +10,9 @@ public class WebController {
     public String welcomePage() {
         return "index";
     }
+    
+    @RequestMapping("/adminPage")
+    public String adminPage() {
+        return "adminPage";
+    }
 }

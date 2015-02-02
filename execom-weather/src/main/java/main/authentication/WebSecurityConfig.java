@@ -1,6 +1,9 @@
 package main.authentication;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
@@ -12,8 +15,8 @@ import org.springframework.security.config.annotation.web.servlet.configuration.
 @EnableWebMvcSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         
-//    @Autowired
-//    private UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
         
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -24,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
-                .loginPage("/login")
+                .loginPage("/")
                 .permitAll()
                 .and()
             .logout()
@@ -32,12 +35,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     
     /**
-     * Authenticates registered users (from database)
+     * Authenticates administrators (from database)
      */
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth) {
-//        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-//        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-//        auth.authenticationProvider(daoAuthenticationProvider);
-//    }
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        auth.authenticationProvider(daoAuthenticationProvider);
+    }
 }
