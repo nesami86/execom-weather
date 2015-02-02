@@ -23,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        Administrator admin = adminRepository.findByUsername(username);
+        Administrator admin = adminRepository.findByAdministratorUsername(username);
         if (admin == null) {
             throw new UsernameNotFoundException("User not found!");
         }
