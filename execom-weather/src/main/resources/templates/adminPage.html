@@ -1,17 +1,42 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-    <head>
-        <title>Execom weather</title>
-    </head>
-    <body>
-        <h3>Welcome <span th:text="${admin.administratorUsername}"></span></h3>
-        
-        <br />
-        
-        <form action="/logout" method="GET">
-            <button type="submit">Log Out</button>
-        </form>
-                                        
-    </body>
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<title>Execom weather</title>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript">
+	//<![CDATA[
+	function getWeatherReport() {
+
+		$.get("/weather/getData").fail(function() {
+			alert("Fail!");
+		});
+	}
+
+	$(document).ready(function() {
+
+		$("#getData").click(function() {
+			getWeatherReport();
+		});
+	});
+	//]]>
+</script>
+</head>
+<body>
+	<h3>
+		Welcome <span th:text="${admin.administratorUsername}"></span>
+	</h3>
+
+	<br />
+
+	<button id="getData">Get data</button>
+
+	<br /><br />
+
+	<form action="/logout" method="GET">
+		<button type="submit">Log Out</button>
+	</form>
+
+</body>
 </html>
