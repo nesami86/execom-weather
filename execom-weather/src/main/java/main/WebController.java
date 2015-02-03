@@ -1,8 +1,11 @@
 package main;
 
+import java.io.IOException;
+
 import main.database.AdministratorRepository;
 import main.database.CityRepository;
 import main.weatherApplication.WeatherQuery;
+import main.weatherApplication.WeatherQueryInit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,9 +26,13 @@ public class WebController extends WebControllerAddMethods {
     @Autowired
     private WeatherQuery weatherQuery;
     
+    @Autowired
+    private WeatherQueryInit weatherQueryInit;
+    
     @RequestMapping("/")
-    public String welcomePage(Model model) {
+    public String welcomePage(Model model) throws IllegalStateException, IOException {
         model.addAttribute("cities", cityRepository.findAll());
+        weatherQueryInit.returnWeather();
         return "index";
     }
     

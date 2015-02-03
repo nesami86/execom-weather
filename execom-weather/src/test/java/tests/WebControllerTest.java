@@ -1,5 +1,7 @@
 package tests;
 
+import java.io.IOException;
+
 import main.WebController;
 import main.database.AdministratorRepository;
 import main.entities.Administrator;
@@ -51,7 +53,7 @@ public class WebControllerTest {
     }
     
     @Test
-    public void welcomePageTest() {
+    public void welcomePageTest() throws IllegalStateException, IOException {
         assertEquals("index", webController.welcomePage(model));
     }
     
