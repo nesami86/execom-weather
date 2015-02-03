@@ -5,11 +5,12 @@ import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.io.Serializable;
-
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -31,7 +32,7 @@ public class City implements Serializable {
 	@Column(name = "COD")
 	private Integer cod; // weather code
 	
-	@OneToMany(cascade = { ALL }, fetch = LAZY, mappedBy = "city")
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy = "city")
 	private List<Weather> weatherList = new ArrayList<Weather>();
 
 	

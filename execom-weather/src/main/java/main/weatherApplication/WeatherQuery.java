@@ -24,7 +24,7 @@ public class WeatherQuery {
 	
 	
 	@SuppressWarnings("resource")
-	public static String returnWeather() throws IllegalStateException, IOException{
+	public static void returnWeather() throws IllegalStateException, IOException{
 		//	cities.add(764679); // Minsk
 		/*	cities.add(524901); // MOSKVA
 			cities.add(792680); // BEOGRAD
@@ -68,6 +68,6 @@ public class WeatherQuery {
 				toTime = fromTimeX;
 			}
 			System.out.println(jsonPoruka);
-			return jsonPoruka;//+jsonPoruka;
+		//	return jsonPoruka;//+jsonPoruka;
 	}
 }

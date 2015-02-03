@@ -8,5 +8,5 @@ import org.springframework.data.repository.CrudRepository;
 @Component
 public interface CityRepository extends CrudRepository<City, Long>{
 
-	City findByCityID(String CityID);
+	//City findByCityID(Integer id);  //mora se zvat isto kao i polje u entitetu
 }
