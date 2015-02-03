@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+
 <title>Execom weather</title>
 
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -21,21 +23,6 @@
 			getWeatherReport();
 		});
 		
-		$("#getWatherHistory").click(function() {
-            getWeatherReportHistory();
-        });
-		
-		$("#pickHistory").click(function() {
-            getPickedWeatherReportHistory();
-        });
-		
-		$("#forecast").click(function() {
-            getWeatherForecast();
-        });
-		
-		$("#pickForecast").click(function() {
-            getPickedWeatherForecast();
-        });
 	});
 	//]]>
 </script>
@@ -60,39 +47,15 @@
 
 	<div>
 		<p>
-			Get weather report for <input type="text" id="city2" placeHolder="Enter city name ... " /> for last 
-			<input type="number" id="numberOfDays" value="1" /> days
-			<button id="getWatherHistory">Get weather history</button>
-		</p>
-	</div>
-
-	<br />
-
-	<div>
-		<p>
-			Pick a date <input type="datetime" id="date" /> for weather report for 
-			<input type="text" id="city3" placeHolder="Enter city name ... " />
-			<button id="pickHistory">Get weather report</button>
-		</p>
-	</div>
-
-	<br />
-
-	<div>
-		<p>
-			Get weather forecast for <input type="text" id="city4" placeHolder="Enter city name ... " /> for next 
-			<input type="number" id="forecastedDays" value="1" />
-			<button id="forecast">Get weather forecast</button>
-		</p>
-	</div>
-
-	<br />
-
-	<div>
-		<p>
-			Pick a date <input type="datetime" id="dateForecast" /> for forecast a weather for 
-			<input type="text" id="city5" placeHolder="Enter city name ... " />
-			<button id="pickForecast">Get weather report</button>
+			Get weather report for 
+			
+			<select id="city2">
+			     <option th:each="city:${ cities }" th:value="${ city.id }" th:text="${ city.id }"></option>
+			</select>
+						
+			from <input type="datetime" id="date1" /> to <input type="datetime" id="date" />
+			
+			<button id="getWatherHistory">Get report</button>
 		</p>
 	</div>
 

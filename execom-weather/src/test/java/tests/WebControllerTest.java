@@ -52,7 +52,7 @@ public class WebControllerTest {
     
     @Test
     public void welcomePageTest() {
-        assertEquals("index", webController.welcomePage());
+        assertEquals("index", webController.welcomePage(model));
     }
     
     @Test
