@@ -4,6 +4,7 @@ import main.authentication.UserDetailsServiceImpl;
 import main.database.AdministratorRepository;
 import main.entities.Administrator;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 
 import static org.mockito.Mockito.spy;
@@ -44,12 +46,13 @@ public class UserDetailsServiceImplTest {
     @Autowired
     private Administrator admin;
     
+    @Ignore
     @Test
     public void loadUserByUsernameTest1() {
         UserDetailsServiceImpl spy = spy(userDetailsServiceImpl);
         
         when(AdminRepo.findByAdministratorUsername(anyString())).thenReturn(admin);
-//        when(spy.loadUserByUsername(anyString())).thenReturn(userDetails);
+        when(spy.loadUserByUsername(anyString())).thenReturn(userDetails);
         spy.loadUserByUsername(anyString());
         
         verify(spy).convertAdmin(admin);
@@ -59,5 +62,13 @@ public class UserDetailsServiceImplTest {
     public void loadUserByUsernameTest2() {
         when(AdminRepo.findByAdministratorUsername(anyString())).thenReturn(null);
         userDetailsServiceImpl.loadUserByUsername(anyString());
+    }
+    
+    @Test
+    public void convertAdminTest() {
+        when(admin.getAdministratorUsername()).thenReturn("AAA");
+        when(admin.getAdministratorPassword()).thenReturn("BBB");
+        
+        assertEquals("AAA", userDetailsServiceImpl.convertAdmin(admin).getUsername());
     }
 }
