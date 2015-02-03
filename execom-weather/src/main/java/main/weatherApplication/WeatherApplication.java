@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.database.CityRepository;
+import main.database.sajatDBtest;
 import main.entities.City;
 import main.entities.Weather;
 
@@ -34,9 +35,9 @@ public class WeatherApplication {
 	private static Integer MONTH_IN_SEC = 2629744;
 	private static Long YEAR_IN_SEC = 3144960052l;
 	@Autowired
-	static CityRepository cr ;
+	private CityRepository cr ;
 	
-	public static void writCity(City city){
+	public void writCity(City city){
 		try{
 		cr.save(city);
 		}catch(Exception e){
@@ -44,7 +45,7 @@ public class WeatherApplication {
 		}
 	}
 	public static void main(String[] args) throws ClientProtocolException,
-	IOException, SQLException, ClassNotFoundException {/*
+	IOException, SQLException, ClassNotFoundException {
 		
 		List<Integer> gradovi = new ArrayList<Integer>();
 		gradovi.add(764679); // Minsk
@@ -60,7 +61,7 @@ public class WeatherApplication {
 		gradovi.add(2867993); // Stuttgart
 		gradovi.add(745044);*/ // Istanbul
 	
-	/*
+	
 		Integer fromTime = (int) (System.currentTimeMillis() / 1000);
 		
 		Integer toTime = fromTime - MONTH_IN_SEC; // krajnjeVreme
@@ -146,8 +147,10 @@ public class WeatherApplication {
 					session.getTransaction().commit();
 					session.close();
 					sessionFactory.close();*/
-			/*		System.out.println("ID grada"+city.getId());
-					WeatherApplication.writCity(city);
+					System.out.println("ID grada"+city.getId());
+					
+					sajatDBtest sajDB = new sajatDBtest();
+					sajDB.cuvaj(city);
 				
 				   }catch(IllegalStateException e){
 					   System.out.println("Ono sto smo dobili nije json poruka");
@@ -157,8 +160,8 @@ public class WeatherApplication {
 		}
 		
 		
-		*/
-		System.out.println(WeatherQuery.returnWeather());
+		
+		//System.out.println(WeatherQuery.returnWeather());
 	}
 	
 	

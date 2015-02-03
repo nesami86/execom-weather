@@ -25,7 +25,7 @@ public class WeatherQuery {
 	
 	@SuppressWarnings("resource")
 	public static String returnWeather() throws IllegalStateException, IOException{
-			cities.add(764679); // Minsk
+		//	cities.add(764679); // Minsk
 		/*	cities.add(524901); // MOSKVA
 			cities.add(792680); // BEOGRAD
 			cities.add(2969284); // Vienne
@@ -33,15 +33,15 @@ public class WeatherQuery {
 			cities.add(4219762); // Rome
 			cities.add(2673730); // Stockholm
 			cities.add(5245497); // Berlin
-			cities.add(2867993); // Stuttgart
-			cities.add(745044);*/ // Istanbul
+			cities.add(2867993);*/ // Stuttgart
+			cities.add(745044); // Istanbul
 			Integer fromTime = (int) (System.currentTimeMillis() / 1000);
 			
 			Integer toTime = fromTime - MONTH_IN_SEC; // krajnjeVreme
 			
 			Integer fromTimeX = 0;
 			
-			for (int i = 0; i < 2; i++) {
+			for (int i = 0; i < 4; i++) {
 				
 				fromTimeX = toTime + WEEK_IN_SEC;
 			
@@ -58,13 +58,16 @@ public class WeatherQuery {
 					BufferedReader br = new BufferedReader(new InputStreamReader(
 							response.getEntity().getContent()));
 					
-					JsonParser jsonParser = new JsonParser();
+				
 					
 					 jsonPoruka = br.readLine();
-			
+					 
+					 //
+					 JSONParser.parser(jsonPoruka);
 				}
+				toTime = fromTimeX;
 			}
 			System.out.println(jsonPoruka);
-			return "##### STA JE ISCITANO SA API-ja ####";//+jsonPoruka;
+			return jsonPoruka;//+jsonPoruka;
 	}
 }
