@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+
 @Entity
 @Table(name = "City")
 public class City implements Serializable {
@@ -27,7 +27,7 @@ public class City implements Serializable {
 	@Column(name = "CITY_ID", unique = true, nullable = false)
 	private Integer id;
 	
-	@JsonProperty("cod")
+	
 	@Column(name = "COD")
 	private Integer cod; // weather code
 	
