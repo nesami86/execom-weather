@@ -1,7 +1,9 @@
 package main.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,6 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import main.entities.City;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -39,7 +42,7 @@ public class Weather {
 	@Column(name = "TEMP_MAX")
 	private Double temp_max;
 	//@ManyToOne
-	@ManyToOne//moze se zvati isto 
+	@ManyToOne(fetch=FetchType.LAZY, cascade={ CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
 	@JoinColumn(name="CITYWETHER_ID", referencedColumnName="CITY_ID", nullable=false)
 	private City city;
 	
