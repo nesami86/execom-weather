@@ -4,12 +4,12 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Component;
-
 import main.database.CityRepository;
-import main.database.sajatDBtest;
 import main.entities.City;
 import main.entities.Weather;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -20,7 +20,8 @@ import com.google.gson.stream.JsonReader;
 @Component
 public class JSONParser {
 
-	CityRepository cityRepository;
+    @Autowired
+	private CityRepository cityRepository;
 	
 	public void parser(String jsonPoruka){
 		

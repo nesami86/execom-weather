@@ -13,8 +13,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonParser;
-
 
 @Component
 public class WeatherQuery {
@@ -31,7 +29,7 @@ public class WeatherQuery {
 	
 	
 	@SuppressWarnings("resource")
-	public void returnWeather() throws IllegalStateException, IOException{
+	public void returnWeather(String x) throws IllegalStateException, IOException{
 		//	cities.add(764679); // Minsk
 		/*	cities.add(524901); // MOSKVA
 			cities.add(792680); // BEOGRAD
@@ -52,11 +50,12 @@ public class WeatherQuery {
 				
 				fromTimeX = toTime + WEEK_IN_SEC;
 			
-				for(int x: cities){
+				
 					
-					HttpClient client = new DefaultHttpClient();
+					@SuppressWarnings("deprecation")
+                    HttpClient client = new DefaultHttpClient();
 					
-					HttpGet request = new HttpGet("http://api.openweathermap.org/data/2.5/history/city?id="
+					HttpGet request = new HttpGet("http://api.openweathermap.org/data/2.5/history/city?q="
 							+ x + "&type=hour&start=" + toTime
 							+ "&end=" + fromTimeX
 							+ "&APPID=c63f2ee343e3f8ce3a7e452d8f9ad08d");
@@ -71,7 +70,7 @@ public class WeatherQuery {
 					 
 					 //
 					 parser.parser(jsonPoruka);
-				}
+				
 				toTime = fromTimeX;
 			}
 			System.out.println(jsonPoruka);
