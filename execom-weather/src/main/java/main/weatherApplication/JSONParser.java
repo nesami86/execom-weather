@@ -4,6 +4,9 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
+import main.database.CityRepository;
 import main.database.sajatDBtest;
 import main.entities.City;
 import main.entities.Weather;
@@ -14,9 +17,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
+@Component
 public class JSONParser {
 
-	public static void parser(String jsonPoruka){
+	CityRepository cityRepository;
+	
+	public void parser(String jsonPoruka){
 		
 		JsonParser jsonParser = new JsonParser();
 		   try{
@@ -68,8 +74,7 @@ public class JSONParser {
 		
 					System.out.println("ID grada"+city.getId());
 					
-					sajatDBtest sajDB = new sajatDBtest();
-					sajDB.cuvaj(city);
+					cityRepository.save(city);
 				
 				   }catch(IllegalStateException e){
 					   System.out.println("Ono sto smo dobili nije json poruka");

@@ -10,21 +10,28 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonParser;
 
+
+@Component
 public class WeatherQuery {
 	private static Integer DAY_IN_SEC = 86400;
 	private static Integer WEEK_IN_SEC = 604800;
 	private static Integer MONTH_IN_SEC = 2629744;
 	private static Long YEAR_IN_SEC = 3144960052l;
 	
+	@Autowired
+	JSONParser parser;
+	
 	private static String jsonPoruka ="";
 	private static List<Integer> cities = new ArrayList<Integer>();
 	
 	
 	@SuppressWarnings("resource")
-	public static void returnWeather() throws IllegalStateException, IOException{
+	public void returnWeather() throws IllegalStateException, IOException{
 		//	cities.add(764679); // Minsk
 		/*	cities.add(524901); // MOSKVA
 			cities.add(792680); // BEOGRAD
@@ -63,7 +70,7 @@ public class WeatherQuery {
 					 jsonPoruka = br.readLine();
 					 
 					 //
-					 JSONParser.parser(jsonPoruka);
+					 parser.parser(jsonPoruka);
 				}
 				toTime = fromTimeX;
 			}
