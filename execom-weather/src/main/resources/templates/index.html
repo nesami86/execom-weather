@@ -22,7 +22,6 @@
 		$("#getWeather").click(function() {
 			getWeatherReport();
 		});
-		
 	});
 	//]]>
 </script>
@@ -32,7 +31,7 @@
 
 	<br />
 
-	<form action="/adminPage" method="POST" style="display: none;">
+	<form action="/adminPage" method="POST">
 		<button type="submit">Admin Log In</button>
 	</form>
 
@@ -53,7 +52,7 @@
 			     <option th:each="city:${ cities }" th:value="${ city.id }" th:text="${ city.id }"></option>
 			</select>
 						
-			from <input type="datetime" id="date1" /> to <input type="datetime" id="date" />
+			from <input type="date" id="date1" /> to <input type="date" id="date" />
 			
 			<button id="getWatherHistory">Get report</button>
 		</p>
