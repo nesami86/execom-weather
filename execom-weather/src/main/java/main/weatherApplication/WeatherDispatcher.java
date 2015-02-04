@@ -19,7 +19,7 @@ public class WeatherDispatcher {
         
     }
     
-    public long getUnixTime (String date) {
+    public long getUnixTime(String date) {
         return getDate(date).getTimeInMillis();
     }
     
