@@ -19,7 +19,7 @@ public class WeatherQueryInit {
 	private static Integer WEEK_IN_SEC = 604800;
 	private static Integer MONTH_IN_SEC = 2629744;
 	private static Integer YEAR_IN_SEC =  31536000;
-
+	private static Integer JAN_01_2015 = 1420070400;
 	@Autowired
 	JSONParser parser;
 	
@@ -38,14 +38,13 @@ public class WeatherQueryInit {
 			cities.add(5245497); // Berlin
 			cities.add(2867993); // Stuttgart
 			cities.add(745044);  // Istanbul
-			Integer fromTime = (int) (System.currentTimeMillis() / 1000);
 			
-			Integer toTime = fromTime - YEAR_IN_SEC; // krajnjeVreme
+			Integer toTime = JAN_01_2015 - 2*YEAR_IN_SEC; // krajnjeVreme
 			
 			Integer fromTimeX = 0;
 			
-			for (int i = 0; i < 52; i++) {
-				
+			for (int i = 0; i < 104; i++) {
+		
 				fromTimeX = toTime + WEEK_IN_SEC;
 			
 				for (int x : cities) {
@@ -53,10 +52,10 @@ public class WeatherQueryInit {
 					@SuppressWarnings("deprecation")
                     HttpClient client = new DefaultHttpClient();
 					
-					HttpGet request = new HttpGet("http://api.openweathermap.org/data/2.5/history/city?id="
-							+ x + "&type=hour&start=" + toTime
-							+ "&end=" + fromTimeX
-							+ "&APPID=c63f2ee343e3f8ce3a7e452d8f9ad08d");
+					String query = "http://api.openweathermap.org/data/2.5/history/city?id="+x+"&type=day&start=" + toTime + "&end=" + fromTimeX
+							+ "&APPID=c63f2ee343e3f8ce3a7e452d8f9ad08d";
+					
+					HttpGet request = new HttpGet(query);
 				
 					HttpResponse response = client.execute(request);
 					BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -66,14 +65,12 @@ public class WeatherQueryInit {
 					
 					 jsonPoruka = br.readLine();
 					 
-					 //
+					 
 					 parser.parser(jsonPoruka);
 				}
 				toTime = fromTimeX;
 				
 			}
-			System.out.println(jsonPoruka);
-		//	return jsonPoruka;//+jsonPoruka;
 	}
 	
 }
