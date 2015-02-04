@@ -10,38 +10,41 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name="cities")
 public class City {
 
-	@Id
-	private Integer cityId;
-	
-	@OneToMany(mappedBy="city", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-	private List<Weather> weatherList = new ArrayList<Weather>();
+    @Id
+    private Integer cityId;
+    
+    @OneToMany(mappedBy="city", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @JsonManagedReference
+    private List<Weather> weatherList = new ArrayList<Weather>();
 
-	public City() {
-	    
-	}
+    public City() {
+        
+    }
 
-	public City(Integer id, Integer cod) {
-		super();
-		this.cityId = id;
-	}
-	
-	public Integer getId() {
+    public City(Integer id, Integer cod) {
+        super();
+        this.cityId = id;
+    }
+    
+    public Integer getId() {
         return cityId;
     }
 
     public void setId(Integer id) {
         this.cityId = id;
     }
-	
-	public List<Weather> getWeatherList() {
+    
+    public List<Weather> getWeatherList() {
         return weatherList;
     }
-	
-	public void setWeatherList(List<Weather> weatherList) {
+    
+    public void setWeatherList(List<Weather> weatherList) {
         this.weatherList = weatherList;
     }
 
@@ -50,7 +53,8 @@ public class City {
         weatherList.add(weather);
     }
 
-	public String toString() {
-		return "City code: " + cityId;
-	}
+    @Override
+    public String toString() {
+        return "City [cityId=" + cityId + "]";
+    }
 }

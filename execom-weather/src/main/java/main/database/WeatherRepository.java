@@ -5,15 +5,17 @@ import java.util.List;
 import main.entities.City;
 import main.entities.Weather;
 
+import org.springframework.data.repository.Repository;
 import org.springframework.stereotype.Component;
-import org.springframework.data.repository.CrudRepository;
 
 @Component
-public interface WeatherRepository extends CrudRepository<Weather, Long>{
+public interface WeatherRepository extends Repository<Weather, Long>{
 
     List<Weather> findByCity(City city);
+        
+    List<Weather> findByDateGreaterThan(Long date);
     
-    List<Weather> findByDate(Long date);
+    List<Weather> findByDateLessThan(Long date);
     
-    List<Weather> findByCityAndDate(City city, Long date);
+    List<Weather> findByCityAndDateBetween(City city, Long date1, Long date2);
 }

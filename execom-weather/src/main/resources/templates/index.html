@@ -16,6 +16,12 @@
             alert("Fail!");
         });
     }
+    
+    function displayResults(a) {
+    	for (var i = 0; i < a.length; i++) {
+    		alert(a[i].date + " " + a[i].temperature);
+    	}
+    }
 
     function getWeatherHistory() {
 
@@ -30,7 +36,7 @@
             dataType : "JSON"
 
         }).done(function(a) {
-            alert(a.cityId + " " + a.startingDate + " " + a.endingDate);
+        	displayResults(a);
         }).fail(function() {
             alert("Fail!");
         });

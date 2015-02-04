@@ -10,38 +10,41 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Entity										
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+@Entity                                        
 @Table(name="weather")
 public class Weather {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer weatherId;
-	
-	private Long date;
-	private Double temperature;
-	private Double humidity;
-	private Double pressure;
-	private Double tempMin;
-	private Double tempMax;
-	
-	@ManyToOne(fetch=FetchType.LAZY, cascade={ CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
-	@JoinColumn(name="city_id")
-	private City city;
-	
-	public Weather() {
-	    
-	}
-	
-	public Weather(Long date, Double temperature, Double humidity, Double pressure, Double temp_min, Double temp_max) {
-		super();
-		this.date = date;
-		this.temperature = temperature;
-		this.humidity = humidity;
-		this.pressure = pressure;
-		this.tempMin = temp_min;
-		this.tempMax = temp_max;
-	}
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer weatherId;
+    
+    private Long date;
+    private Double temperature;
+    private Double humidity;
+    private Double pressure;
+    private Double tempMin;
+    private Double tempMax;
+    
+    @ManyToOne(fetch=FetchType.LAZY, cascade={ CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
+    @JoinColumn(name="city_id")
+    @JsonBackReference
+    private City city;
+    
+    public Weather() {
+        
+    }
+    
+    public Weather(Long date, Double temperature, Double humidity, Double pressure, Double temp_min, Double temp_max) {
+        super();
+        this.date = date;
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.pressure = pressure;
+        this.tempMin = temp_min;
+        this.tempMax = temp_max;
+    }
 
     public Integer getWeatherId() {
         return weatherId;
@@ -105,5 +108,11 @@ public class Weather {
 
     public void setCity(City city) {
         this.city = city;
-    }	
+    }
+
+    @Override
+    public String toString() {
+        return "Weather [weatherId=" + weatherId + ", date=" + date + ", temperature=" + temperature + ", humidity=" + humidity
+                + ", pressure=" + pressure + ", tempMin=" + tempMin + ", tempMax=" + tempMax + ", city=" + city + "]";
+    }
 }

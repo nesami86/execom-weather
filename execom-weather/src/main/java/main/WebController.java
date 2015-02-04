@@ -1,9 +1,11 @@
 package main;
 
 import java.io.IOException;
+import java.util.List;
 
 import main.database.AdministratorRepository;
 import main.database.CityRepository;
+import main.entities.Weather;
 import main.entities.WeatherPeriod;
 import main.weatherApplication.WeatherDispatcher;
 import main.weatherApplication.WeatherQuery;
@@ -64,8 +66,7 @@ public class WebController extends WebControllerAddMethods {
     }
     
     @RequestMapping("/weather/getPeriod")
-    public @ResponseBody WeatherPeriod getWeatherPeriod(@RequestBody WeatherPeriod weatherPeriod) {
-        weatherDispatcher.getWeatherReports(weatherPeriod);
-        return weatherPeriod;
+    public @ResponseBody List<Weather> getWeatherPeriod(@RequestBody WeatherPeriod weatherPeriod) {
+        return weatherDispatcher.getWeatherReports(weatherPeriod);
     }
 }
