@@ -11,18 +11,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Cities")
+@Table(name="cities")
 public class City {
 
 	@Id
 	private Integer cityId;
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy = "city")
+	@OneToMany(mappedBy="city", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	private List<Weather> weatherList = new ArrayList<Weather>();
-	
-	public List<Weather> getWeatherList() {
-		return weatherList;
-	}
 
 	public City() {
 	    
@@ -33,6 +29,18 @@ public class City {
 		this.cityId = id;
 	}
 	
+	public Integer getId() {
+        return cityId;
+    }
+
+    public void setId(Integer id) {
+        this.cityId = id;
+    }
+	
+	public List<Weather> getWeatherList() {
+        return weatherList;
+    }
+	
 	public void setWeatherList(List<Weather> weatherList) {
         this.weatherList = weatherList;
     }
@@ -41,14 +49,6 @@ public class City {
         weather.setCity(this);
         weatherList.add(weather);
     }
-
-	public Integer getId() {
-		return cityId;
-	}
-
-	public void setId(Integer id) {
-		this.cityId = id;
-	}
 
 	public String toString() {
 		return "City code: " + cityId;
