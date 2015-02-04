@@ -1,62 +1,81 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-    <head>
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
 
 <title>Execom weather</title>
 
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script type="text/javascript">
-	//<![CDATA[
-	function getWeatherReport() {
+    //<![CDATA[
+    function getWeatherReport() {
 
-		$.get("/weather/report?city=" + $("#city").val(), {}, function(a){
-			alert(a);
-		}).fail(function(){
-			alert("Fail!");
-		});
-	}
+        $.get("/weather/report?city=" + $("#city").val(), {}, function(a) {
+            alert(a);
+        }).fail(function() {
+            alert("Fail!");
+        });
+    }
 
-	$(document).ready(function() {
+    function getWeatherHistory() {
 
-		$("#getWeather").click(function() {
-			getWeatherReport();
-		});
-	});
-	//]]>
+        var weatherPeriod = { cityId : $("#city2").val(), startingDate : $("#date1").val(), endingDate : $("#date2").val() };
+
+        $.ajax({
+
+            type : "POST",
+            contentType : "application/json; charset=utf-8",
+            url : "/weather/getPeriod",
+            data : JSON.stringify(weatherPeriod),
+            dataType : "JSON"
+
+        }).done(function(a) {
+            alert(a.cityId + " " + a.startingDate + " " + a.endingDate);
+        }).fail(function() {
+            alert("Fail!");
+        });
+    }
+
+    $(document).ready(function() {
+
+        $("#getWeather").click(function() {
+            getWeatherReport();
+        });
+
+        $("#getWeatherHistory").click(function() {
+            getWeatherHistory();
+        });
+    });
+    //]]>
 </script>
 </head>
 <body>
-	<h3>Welcome to Execom Weather application</h3>
+    <h3>Welcome to Execom Weather application</h3>
 
-	<br />
+    <br />
 
-	<form action="/adminPage" method="POST">
-		<button type="submit">Admin Log In</button>
-	</form>
+    <form action="/adminPage" method="POST">
+        <button type="submit">Admin Log In</button>
+    </form>
 
-	<br />
+    <br />
 
-	<div>
-		<input type="text" id="city" placeHolder="Enter city name ... " />
-		<button id="getWeather">Get weather report</button>
-	</div>
+    <div>
+        <input type="text" id="city" placeHolder="Enter city name ... " />
+        <button id="getWeather">Get weather report</button>
+    </div>
 
-	<br />
+    <br />
 
-	<div>
-		<p>
-			Get weather report for 
-			
-			<select id="city2">
-			     <option th:each="city:${ cities }" th:value="${ city.id }" th:text="${ city.id }"></option>
-			</select>
-						
-			from <input type="date" id="date1" /> to <input type="date" id="date" />
-			
-			<button id="getWatherHistory">Get report</button>
-		</p>
-	</div>
+    <div>
+        <p>
+            Get weather report for <select id="city2">
+                <option th:each="city:${ cities }" th:value="${ city.id }" th:text="${ city.id }"></option>
+            </select> from <input type="date" id="date1" /> to <input type="date" id="date2" />
+
+            <button id="getWeatherHistory">Get report</button>
+        </p>
+    </div>
 
 </body>
 </html>

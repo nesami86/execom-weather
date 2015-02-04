@@ -4,12 +4,15 @@ import java.io.IOException;
 
 import main.database.AdministratorRepository;
 import main.database.CityRepository;
+import main.entities.WeatherPeriod;
+import main.weatherApplication.WeatherDispatcher;
 import main.weatherApplication.WeatherQuery;
 import main.weatherApplication.WeatherQueryInit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,6 +31,9 @@ public class WebController extends WebControllerAddMethods {
     
     @Autowired
     private WeatherQueryInit weatherQueryInit;
+    
+    @Autowired
+    private WeatherDispatcher weatherDispatcher;
     
     @RequestMapping("/")
     public String welcomePage(Model model) throws IllegalStateException, IOException {
@@ -55,5 +61,11 @@ public class WebController extends WebControllerAddMethods {
     @RequestMapping("/weather/getData")
     public void getWeatherHistory() throws IllegalStateException, IOException {
         weatherQueryInit.returnWeather();
+    }
+    
+    @RequestMapping("/weather/getPeriod")
+    public @ResponseBody WeatherPeriod getWeatherPeriod(@RequestBody WeatherPeriod weatherPeriod) {
+        weatherDispatcher.getWeatherReports(weatherPeriod);
+        return weatherPeriod;
     }
 }
