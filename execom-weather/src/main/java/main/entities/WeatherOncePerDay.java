@@ -20,9 +20,11 @@ public class WeatherOncePerDay {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer WeatherOnceADayId;
 	
+	private Long date;
 	private Double tempMin;
 	private Double tempMax;
 	
+
 	@ManyToOne(fetch=FetchType.LAZY, cascade={ CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
     @JoinColumn(name="city_id")
     @JsonBackReference
@@ -60,14 +62,23 @@ public class WeatherOncePerDay {
 	public void setCity(City city) {
 		this.city = city;
 	}
+	
+	public Long getDate() {
+		return date;
+	}
+
+	public void setDate(Long date) {
+		this.date = date;
+	}
 
 	public WeatherOncePerDay(){}
 	
 	public WeatherOncePerDay( Double tempMin,
-			Double tempMax) {
+			Double tempMax, Long date) {
 		super();
 		this.tempMin = tempMin;
 		this.tempMax = tempMax;
+		this.date = date;
 	}
 	
 	
