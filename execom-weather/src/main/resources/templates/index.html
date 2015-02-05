@@ -19,8 +19,22 @@
     
     function displayResults(a) {
     	for (var i = 0; i < a.length; i++) {
-    		alert(a[i].date + " " + a[i].temperature);
+    		var date = new Date(a[i].date).toString().substring(0,21);
+    		var temperature = Math.round(a[i].temperature);   		
+    		fillWeatherTable(date, temperature);
     	}
+    	$("#weatherReportTable").show();
+    }
+    
+    function fillWeatherTable(date, temperature) {
+    	if(date.indexOf("00:00") > -1)
+            $("#weatherReportTable table").append("<tr class='content'><td> &nbsp; </td></tr>");
+    	
+    	var content = "<tr class='content'><td>" + date + "</td><td align='center'>" + temperature + "</td></tr>";
+    	$("#weatherReportTable table").append(content);
+    	
+    	if(date.indexOf("23:00") > -1)
+    		$("#weatherReportTable table").append("<tr class='content'><td> &nbsp; </td></tr>");	 
     }
 
     function getWeatherHistory() {
@@ -51,6 +65,10 @@
         $("#getWeatherHistory").click(function() {
             getWeatherHistory();
         });
+        
+        $("#clear").click(function(){
+        	$("tr.content").remove();
+        });
     });
     //]]>
 </script>
@@ -76,12 +94,20 @@
     <div>
         <p>
             Get weather report for <select id="city2">
-                <option th:each="city:${ cities }" th:value="${ city.id }" th:text="${ city.id }"></option>
-            </select> from <input type="date" id="date1" /> to <input type="date" id="date2" />
+            <option th:each="city:${ cities }" th:value="${ city.id }" th:text="${ city.id }"></option>
+                </select> from <input type="date" id="date1" /> to <input type="date" id="date2" />
 
             <button id="getWeatherHistory">Get report</button>
         </p>
     </div>
+    
+    <div id="weatherReportTable" style="display: none; z-index: 2;">
+        <table>
+            <tr><td align="center"><b>Time:</b></td><td align="center"><b>Temperature:</b></td></tr>
+        </table>
+    </div>
+    
+    <button id="clear">Clear</button>
 
 </body>
 </html>

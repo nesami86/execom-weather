@@ -30,7 +30,7 @@ public class WeatherReader {
         Integer cityId = Integer.parseInt(weatherPeriod.getCityId());
         City city = cityRepository.findByCityId(cityId);
         long startingDate = getUnixTime(weatherPeriod.getStartingDate());
-        long endingDate = getUnixTime(weatherPeriod.getEndingDate());
+        long endingDate = getUnixTime(weatherPeriod.getEndingDate()) - 3600000;
         
         return weatherRepository.findByCityAndDateBetween(city, startingDate, endingDate);
     }
