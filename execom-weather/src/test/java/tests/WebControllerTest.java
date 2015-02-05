@@ -1,10 +1,18 @@
 package tests;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import main.WebController;
-import main.database.AdministratorRepository;
 import main.entities.Administrator;
+import main.entities.City;
+import main.entities.Weather;
+import main.entities.WeatherPeriod;
+import main.weatherApplication.JSONParser;
+import main.weatherApplication.WeatherQuery;
+import main.weatherApplication.WeatherQueryInit;
+import main.weatherApplication.WeatherReader;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +29,10 @@ import org.springframework.ui.Model;
 
 import static org.junit.Assert.assertEquals;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestBeans.class, WebControllerTest.TestConfig.class})
 public class WebControllerTest {
@@ -32,19 +44,51 @@ public class WebControllerTest {
         public WebController getWebControllerInstance() {
             return new WebController();
         }
+        
+        @Bean
+        public WeatherQuery getWeatherQueryMock() {
+            return mock(WeatherQuery.class);
+        }
+        
+        @Bean
+        public WeatherQueryInit getWeatherQueryInitMock() {
+            return mock(WeatherQueryInit.class);
+        }
+        
+        @Bean
+        public WeatherReader getWeatherDispatcherMock() {
+            return mock(WeatherReader.class);
+        }
+        
+        @Bean
+        public JSONParser getJSONParserMock() {
+            return mock(JSONParser.class);
+        }
     }
     
     @Autowired
     private WebController webController;
     
     @Autowired
-    private AdministratorRepository adminRepo;
-    
-    @Autowired
     private Model model;
     
     @Autowired
     private Administrator admin;
+    
+    @Autowired
+    private City city;
+   
+    @Autowired
+    private WeatherQueryInit weatherQueryInit;
+    
+    @Autowired
+    private WeatherReader weatherReader;
+    
+    @Autowired
+    private WeatherPeriod weatherPeriod;
+    
+    @Autowired
+    private WeatherQuery weatherQuery;
     
     @Before
     public void setUp() {      
@@ -65,5 +109,24 @@ public class WebControllerTest {
     @Test
     public void adminPageTest() {
         assertEquals("adminPage", webController.adminPage(model));
+    }
+    
+    @Test
+    public void getWeatherReportTest() throws IllegalStateException, IOException {
+        assertEquals("Novi Sad", webController.getWeatherReport("Novi Sad"));
+    }
+    
+    @Test
+    public void getWeatherHistoryTest() throws IllegalStateException, IOException {
+        webController.getWeatherHistory();
+        verify(weatherQueryInit).returnWeather();
+    }
+    
+    @Test
+    public void getWeatherPeriodTest() {
+        List<Weather> weather = new ArrayList<Weather>();      
+        when(weatherReader.getWeatherReports(weatherPeriod)).thenReturn(weather);
+        
+        assertEquals(weather,  webController.getWeatherPeriod(weatherPeriod));
     }
 }
