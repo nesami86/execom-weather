@@ -77,7 +77,7 @@ public class JSONParser {
 					
 					cityRepository.save(city);
 				
-				   }catch(IllegalStateException e){
+				   }catch(Exception e){
 					   System.out.println("Ono sto smo dobili nije json poruka");
 				   }
 	}
