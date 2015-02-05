@@ -69,7 +69,7 @@ public class JSONParser {
 					}
 					
 					//Added for testing purpuoses
-						WeatherOncePerDay weather1pdTEST = new WeatherOncePerDay(0.0, 0.0);
+						WeatherOncePerDay weather1pdTEST = new WeatherOncePerDay(0.0, 0.0 , 0L);
 					//Added for testing purpuoses
 					for (Weather wPom : weatherx) {
 						city.addWeather(wPom);
