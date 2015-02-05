@@ -7,9 +7,9 @@ import main.database.AdministratorRepository;
 import main.database.CityRepository;
 import main.entities.Weather;
 import main.entities.WeatherPeriod;
-import main.weatherApplication.WeatherDispatcher;
 import main.weatherApplication.WeatherQuery;
 import main.weatherApplication.WeatherQueryInit;
+import main.weatherApplication.WeatherReader;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,7 +35,7 @@ public class WebController extends WebControllerAddMethods {
     private WeatherQueryInit weatherQueryInit;
     
     @Autowired
-    private WeatherDispatcher weatherDispatcher;
+    private WeatherReader weatherReader;
     
     @RequestMapping("/")
     public String welcomePage(Model model) throws IllegalStateException, IOException {
@@ -55,7 +55,7 @@ public class WebController extends WebControllerAddMethods {
     }
     
     @RequestMapping("/weather/report")
-    public @ResponseBody String getWeatherReport(@RequestParam("city") String city) throws Exception {
+    public @ResponseBody String getWeatherReport(@RequestParam("city") String city) throws IllegalStateException, IOException {
         weatherQuery.returnWeather(city);
         return city;
     }
@@ -67,6 +67,6 @@ public class WebController extends WebControllerAddMethods {
     
     @RequestMapping("/weather/getPeriod")
     public @ResponseBody List<Weather> getWeatherPeriod(@RequestBody WeatherPeriod weatherPeriod) {
-        return weatherDispatcher.getWeatherReports(weatherPeriod);
+        return weatherReader.getWeatherReports(weatherPeriod);
     }
 }

@@ -14,8 +14,11 @@ import main.entities.WeatherPeriod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Gets weather data from database
+ */
 @Component
-public class WeatherDispatcher {
+public class WeatherReader {
     
     @Autowired
     private WeatherRepository weatherRepository;
@@ -33,7 +36,7 @@ public class WeatherDispatcher {
     }
     
     public long getUnixTime(String date) {
-        return getDate(date).getTimeInMillis()/1000;
+        return getDate(date).getTimeInMillis();
     }
     
     public Calendar getDate(String date) {
