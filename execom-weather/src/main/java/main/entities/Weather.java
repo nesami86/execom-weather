@@ -9,11 +9,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity                                        
-@Table(name="weather")
+@Table(name="weather", uniqueConstraints = @UniqueConstraint(columnNames={"date","city_id"}))
 public class Weather {
 
     @Id
