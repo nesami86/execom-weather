@@ -17,13 +17,19 @@
         });
     }
     
-    function displayResults(a) {
+    function displayReport(a) {
     	for (var i = 0; i < a.length; i++) {
     		var date = new Date(a[i].date).toString().substring(0,21);
     		var temperature = Math.round(a[i].temperature);   		
     		fillWeatherTable(date, temperature);
     	}
     	$("#weatherReportTable").show();
+    }
+    
+    function displayForecast(a) {
+    	for (var i = 0; i < a.length; i++) {
+    		alert(a[i].tempMax);
+    	}
     }
     
     function fillWeatherTable(date, temperature) {
@@ -38,22 +44,37 @@
     }
 
     function getWeatherHistory() {
-
-        var weatherPeriod = { cityId : $("#city2").val(), startingDate : $("#date1").val(), endingDate : $("#date2").val() };
+        makeAjaxCall("/weather/getPeriod", "report");
+    }
+    
+    function getWeatherForecast() {
+    	makeAjaxCall("/weather/getForecast", "forecast");
+    }
+    
+    function makeAjaxCall(url, callback) {
+    	var weatherPeriod = { cityId : $("#city2").val(), startingDate : $("#date1").val(), endingDate : $("#date2").val() };
 
         $.ajax({
 
             type : "POST",
             contentType : "application/json; charset=utf-8",
-            url : "/weather/getPeriod",
+            url : url,
             data : JSON.stringify(weatherPeriod),
             dataType : "JSON"
 
         }).done(function(a) {
-        	displayResults(a);
+            call(callback, a);
         }).fail(function() {
             alert("Fail!");
         });
+    }
+    
+    function call(callback, a) {
+    	if (callback == "forecast") {
+    		displayForecast(a);
+    	} else if (callback == "report") {
+    		displayReport(a);
+    	}
     }
 
     $(document).ready(function() {
@@ -64,6 +85,10 @@
 
         $("#getWeatherHistory").click(function() {
             getWeatherHistory();
+        });
+        
+        $("#getWeatherForecast").click(function() {
+        	getWeatherForecast();
         });
         
         $("#clear").click(function(){
@@ -93,11 +118,12 @@
 
     <div>
         <p>
-            Get weather report for <select id="city2">
+            Get weather report/forecast for <select id="city2">
             <option th:each="city:${ cities }" th:value="${ city.id }" th:text="${ city.id }"></option>
                 </select> from <input type="date" id="date1" /> to <input type="date" id="date2" />
 
-            <button id="getWeatherHistory">Get report</button>
+            &nbsp; <button id="getWeatherHistory">Get report</button>
+            &nbsp; <button id="getWeatherForecast">Get forecast</button>
         </p>
     </div>
     
