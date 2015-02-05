@@ -7,6 +7,7 @@ import java.util.List;
 import main.database.CityRepository;
 import main.entities.City;
 import main.entities.Weather;
+import main.entities.WeatherOncePerDay;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -66,10 +67,13 @@ public class JSONParser {
 
 						weatherx.add(wx);
 					}
-
-
+					
+					//Added for testing purpuoses
+						WeatherOncePerDay weather1pdTEST = new WeatherOncePerDay(0.0, 0.0);
+					//Added for testing purpuoses
 					for (Weather wPom : weatherx) {
 						city.addWeather(wPom);
+						city.AddWeatherOncePerDay(weather1pdTEST);
 					}
 					
 		

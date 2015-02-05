@@ -23,6 +23,10 @@ public class City {
     @JsonManagedReference
     private List<Weather> weatherList = new ArrayList<Weather>();
 
+    @OneToMany(mappedBy="city", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @JsonManagedReference
+    private List<WeatherOncePerDay> weatherOncePerDayList = new ArrayList<WeatherOncePerDay>();
+    
     public City() {
         
     }
@@ -52,8 +56,23 @@ public class City {
         weather.setCity(this);
         weatherList.add(weather);
     }
+    
+    public void AddWeatherOncePerDay(WeatherOncePerDay weather1pd){
+    	weather1pd.setCity(this);
+    	weatherOncePerDayList.add(weather1pd);
+    }
+    
 
-    @Override
+    public List<WeatherOncePerDay> getWeatherOncePerDayList() {
+		return weatherOncePerDayList;
+	}
+
+	public void setWeatherOncePerDayList(
+			List<WeatherOncePerDay> weatherOncePerDayList) {
+		this.weatherOncePerDayList = weatherOncePerDayList;
+	}
+
+	@Override
     public String toString() {
         return "City [cityId=" + cityId + "]";
     }
