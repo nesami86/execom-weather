@@ -72,7 +72,7 @@ public class WebController extends WebControllerAddMethods {
     }
     
     @RequestMapping("/weather/getForecast")
-    public @ResponseBody WeatherOncePerDay getWeatherForecast(@RequestBody WeatherPeriod weatherPeriod) {
+    public @ResponseBody List<WeatherOncePerDay> getWeatherForecast(@RequestBody WeatherPeriod weatherPeriod) {
         return weatherReader.getWeatherForecast(weatherPeriod);
     }
 }

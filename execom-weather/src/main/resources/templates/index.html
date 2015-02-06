@@ -18,36 +18,40 @@
     }
     
     function displayReport(a) {
-    	for (var i = 0; i < a.length; i++) {
-    		var date = new Date(a[i].date).toString().substring(0,21);
-    		var temperature = Math.round(a[i].temperature);   		
-    		fillWeatherTable(date, temperature);
-    	}
-    	$("#weatherReportTable").show();
-    }
+        for (var i = 0; i < a.length; i++) {
+            var date = new Date(a[i].date).toString().substring(0,21);
+            var temperature = Math.round(a[i].temperature);           
+            fillWeatherTable(date, temperature);
+        }
+        $("#weatherReportTable").show();
+    }       
     
     function fillForecastTable(a) {
-    	var date = new Date(a.date).toString().substring(0,15);
-    	var content = "<tr class='content'><td>" + date + "</td><td align='center'>" + 
-                      a.tempMin + "</td><td align='center'>" + a.tempMax + "</td></tr>";
-        $("#weatherForecastTable table").append(content);
-        
+        for (var i=0; i<a.length; i++) {
+            var date = new Date(a[i].date).toString().substring(0,15);
+            var content = "<tr class='content'><td>" + date + "</td><td align='center'>" + 
+                          a[i].tempMin + "</td><td align='center'>" + a[i].tempMax + "</td></tr>";
+            $("#weatherForecastTable table").append(content);
+        }
         $("#weatherForecastTable").show();
     }
     
     function fillWeatherTable(date, temperature) {
-    	if(date.indexOf("00:00") > -1)
+        if(date.indexOf("00:00") > -1)
             $("#weatherReportTable table").append("<tr class='content'><td> &nbsp; </td></tr>");
-    	
-    	var content = "<tr class='content'><td>" + date + "</td><td align='center'>" + temperature + "</td></tr>";
-    	$("#weatherReportTable table").append(content);
-    	
-    	if(date.indexOf("23:00") > -1)
-    		$("#weatherReportTable table").append("<tr class='content'><td> &nbsp; </td></tr>");	 
+        
+        var content = "<tr class='content'><td>" + date + "</td><td align='center'>" + temperature + "</td></tr>";
+        $("#weatherReportTable table").append(content);
+        
+        if(date.indexOf("23:00") > -1)
+            $("#weatherReportTable table").append("<tr class='content'><td> &nbsp; </td></tr>");     
     }
     
-    function makeAjaxCall(url, callback) {
-    	var weatherPeriod = { cityId : $("#city2").val(), startingDate : $("#date1").val(), endingDate : $("#date2").val() };
+    function makeAjaxCall(url, callback) {       
+        var weatherPeriod = { cityId : $("#city2").val(), startingDate : $("#date1").val(), endingDate : $("#date2").val() };
+        
+        if (weatherPeriod.endingDate == "")
+           weatherPeriod.endingDate = weatherPeriod.startingDate;
 
         $.ajax({
 
@@ -65,15 +69,15 @@
     }
     
     function call(callback, a) {
-    	if (callback == "forecast") {
-    		fillForecastTable(a);
-    	} else if (callback == "report") {
-    		displayReport(a);
-    	}
+        if (callback == "forecast") {
+            fillForecastTable(a);
+        } else if (callback == "report") {
+            displayReport(a);
+        }
     }
     
     function clearPage() {
-    	$("tr.content").remove();
+        $("tr.content").remove();
         $("#weatherReportTable").hide();
         $("#weatherForecastTable").hide();
     }
@@ -85,15 +89,15 @@
         });
 
         $("#getWeatherHistory").click(function() {
-        	makeAjaxCall("/weather/getPeriod", "report");
+            makeAjaxCall("/weather/getPeriod", "report");
         });
         
         $("#getWeatherForecast").click(function() {
-        	makeAjaxCall("/weather/getForecast", "forecast");
+            makeAjaxCall("/weather/getForecast", "forecast");
         });
         
         $("#clear").click(function(){
-        	clearPage();
+            clearPage();
         });
     });
     //]]>
@@ -106,7 +110,7 @@
 
     <form action="/adminPage" method="POST">
         <button type="submit">Admin Log In</button>
-    </form>
+    </form> 
 
     <br />
 

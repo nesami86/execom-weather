@@ -42,7 +42,8 @@ public class WeatherReader {
         Integer cityId = Integer.parseInt(weatherPeriod.getCityId());
         City city = cityRepository.findByCityId(cityId);
         long startingDate = getUnixTime(weatherPeriod.getStartingDate());
-        long endingDate = getUnixTime(weatherPeriod.getEndingDate()) - 3600000;
+        long endingDate = getUnixTime(weatherPeriod.getEndingDate());
+        endingDate = adjustEndingDate(endingDate, startingDate);
         
         return new WeatherPeriodExtracted(city, startingDate, endingDate);
     }
@@ -63,13 +64,41 @@ public class WeatherReader {
         return calendar;
     }
     
-    public WeatherOncePerDay getWeatherForecast(WeatherPeriod weatherPeriod) {
-        WeatherPeriodExtracted wpe = extractWeatherPeriod(weatherPeriod);        
-        return makeForecast(wpe);
+    public long adjustEndingDate(long endingDate, long startingDate) {
+        if (endingDate == startingDate) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(endingDate);
+            calendar.add(Calendar.DAY_OF_YEAR, +1);
+            endingDate = calendar.getTimeInMillis();
+        }        
+        return endingDate;
     }
     
-    public WeatherOncePerDay makeForecast(WeatherPeriodExtracted wpe) {
-        List<WeatherOncePerDay> forecastData = getForecastData(wpe);
+    public List<WeatherOncePerDay> getWeatherForecast(WeatherPeriod weatherPeriod) {
+        List<WeatherOncePerDay> daysPredicted = new ArrayList<WeatherOncePerDay>();
+        WeatherPeriodExtracted wpe = extractWeatherPeriod(weatherPeriod);  
+        List<Calendar> days = getDaysForPrediction(wpe);
+        
+        for (Calendar day : days) {
+            WeatherOncePerDay dailyWeather = makeForecast(wpe.getCity(), day.getTimeInMillis());
+            daysPredicted.add(dailyWeather);
+        }
+        return daysPredicted;
+    }
+    
+    public List<Calendar> getDaysForPrediction(WeatherPeriodExtracted wpe) {
+        List<Calendar> days = new ArrayList<Calendar>();
+                
+        for (long date = wpe.getStDate(); date < wpe.getEndDate(); date += 86400000) {
+            Calendar day = Calendar.getInstance();
+            day.setTimeInMillis(date);
+            days.add(day);
+        }
+        return days;
+    }
+    
+    public WeatherOncePerDay makeForecast(City city, long date) {
+        List<WeatherOncePerDay> forecastData = getForecastData(city, date);
         Double tempMin = 0.0;
         Double tempMax = 0.0;
         int counter = 1;
@@ -82,16 +111,16 @@ public class WeatherReader {
         tempMin = tempMin/counter;
         tempMax = tempMax/counter;
         
-        return new WeatherOncePerDay(tempMin, tempMax, wpe.getStDate());
+        return new WeatherOncePerDay(tempMin, tempMax, date);
     }
     
-    public List<WeatherOncePerDay> getForecastData(WeatherPeriodExtracted wpe) {
+    public List<WeatherOncePerDay> getForecastData(City city, long date) {
         List<WeatherOncePerDay> forecastData = new ArrayList<WeatherOncePerDay>();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(wpe.getStDate());
+        calendar.setTimeInMillis(date);
         
         for (int i=0; i<10; i++) {
-            WeatherOncePerDay forecastDay = dailyWeatherRepository.findByCityAndDate(wpe.getCity(), calendar.getTimeInMillis());
+            WeatherOncePerDay forecastDay = dailyWeatherRepository.findByCityAndDate(city, calendar.getTimeInMillis());
             
             if (forecastDay != null) {
                 forecastData.add(forecastDay);
