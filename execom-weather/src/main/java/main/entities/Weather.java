@@ -35,14 +35,12 @@ public class Weather {
         
     }
     
-    public Weather(Integer weatherId, long date, int temperature, int humidity, int pressure, City city) {
+    public Weather( long date, int temperature, int humidity, int pressure) {
         super();
-        this.weatherId = weatherId;
         this.date = date;
         this.temperature = temperature;
         this.humidity = humidity;
         this.pressure = pressure;
-        this.city = city;
     }
 
     public Integer getWeatherId() {
