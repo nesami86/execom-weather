@@ -26,7 +26,8 @@ public class JSONParser {
 	@Autowired
 	private CityRepository cityRepository;
 
-	public void parser(String jsonPoruka) {
+	public void parser(String jsonPoruka, DateTime startDate,
+			DateTime endDate) {
 
 		JsonParser jsonParser = new JsonParser();
 		try {
@@ -51,25 +52,99 @@ public class JSONParser {
 					.getAsJsonObject().getAsJsonArray("list");
 
 			List<Weather> weatherx = new ArrayList<Weather>();
+			
+			DateTime dayOne = startDate;// new DateTime(1420156800*1000L);
+			DateTime dayTwo = startDate.plusDays(1);
+			DateTime dayTree = startDate.plusDays(2);
+			DateTime dayFour = startDate.plusDays(3);
+			DateTime dayFive = startDate.plusDays(4);
+			DateTime daySix = startDate.plusDays(5);
+			DateTime daySeven = startDate.plusDays(6);
+			DateTime dayEight = startDate.plusDays(7);
+
+			int i = 0;
+
+			List<WeatherOncePerDay> dayOneList = new ArrayList<WeatherOncePerDay>();
+			List<WeatherOncePerDay> dayTwoList = new ArrayList<WeatherOncePerDay>();
+			List<WeatherOncePerDay> dayTreeList = new ArrayList<WeatherOncePerDay>();
+			List<WeatherOncePerDay> dayFourList = new ArrayList<WeatherOncePerDay>();
+			List<WeatherOncePerDay> dayFiveList = new ArrayList<WeatherOncePerDay>();
+			List<WeatherOncePerDay> daySixList = new ArrayList<WeatherOncePerDay>();
+			List<WeatherOncePerDay> daySevenList = new ArrayList<WeatherOncePerDay>();
+
+			List<WeatherOncePerDay> weeklyExtreme = new ArrayList<WeatherOncePerDay>();
+			
 			for (JsonElement listEl : measurements) {
 				JsonObject main = (JsonObject) listEl.getAsJsonObject().get(
 						"main");
 
-				Double temp = main.get("temp").getAsDouble() - 273.15;
-				Double humidity = main.get("humidity").getAsDouble();
-				Double pressure = main.get("pressure").getAsDouble();
-				Double temp_min = main.get("temp_min").getAsDouble() - 273.15;
-				Double temp_max = main.get("temp_max").getAsDouble() - 273.15;
+				int temp = main.get("temp").getAsInt() - 273;
+				int humidity = main.get("humidity").getAsInt();
+				int pressure = main.get("pressure").getAsInt();
+				
+				int temp_min = main.get("temp_min").getAsInt() - 273;
+				int temp_max = main.get("temp_max").getAsInt() - 273;
 
 				JsonElement dtj = listEl.getAsJsonObject().get("dt");
 
 				Long dt = dtj.getAsLong(); // ovo bi ovako bilo u sekundama
-				dt = dt * 1000;
-				Weather wx = new Weather(dt, temp, humidity, pressure,
-						temp_min, temp_max);
+				dt = dt * 1000L;
+				Weather wx = new Weather(dt, temp, humidity, pressure);
 
+				DateTime testDate = new DateTime(dt);
 				weatherx.add(wx);
+			
+				if (testDate.isAfter(dayOne) && testDate.isBefore(dayTwo)) {
+					WeatherOncePerDay weatherOncePerDay = new WeatherOncePerDay(
+							temp_min, temp_max, dayOne.getMillis());
+					dayOneList.add(weatherOncePerDay);
+				}
+
+				if (testDate.isAfter(dayTwo) && testDate.isBefore(dayTree)) {
+					WeatherOncePerDay weatherOncePerDay = new WeatherOncePerDay(
+							temp_min, temp_max, dayTwo.getMillis());
+					dayTwoList.add(weatherOncePerDay);
+				}
+
+				if (testDate.isAfter(dayTree) && testDate.isBefore(dayFour)) {
+					WeatherOncePerDay weatherOncePerDay = new WeatherOncePerDay(
+							temp_min, temp_max, dayTree.getMillis());
+					dayTreeList.add(weatherOncePerDay);
+				}
+
+				if (testDate.isAfter(dayFour) && testDate.isBefore(dayFive)) {
+					WeatherOncePerDay weatherOncePerDay = new WeatherOncePerDay(
+							temp_min, temp_max, dayFour.getMillis());
+					dayFourList.add(weatherOncePerDay);
+				}
+
+				if (testDate.isAfter(dayFive) && testDate.isBefore(daySix)) {
+					WeatherOncePerDay weatherOncePerDay = new WeatherOncePerDay(
+							temp_min, temp_max, dayFive.getMillis());
+					dayFiveList.add(weatherOncePerDay);
+				}
+
+				if (testDate.isAfter(daySix) && testDate.isBefore(daySeven)) {
+					WeatherOncePerDay weatherOncePerDay = new WeatherOncePerDay(
+							temp_min, temp_max, daySix.getMillis());
+					daySixList.add(weatherOncePerDay);
+				}
+
+				if (testDate.isAfter(daySeven) && testDate.isBefore(dayEight)) {
+					WeatherOncePerDay weatherOncePerDay = new WeatherOncePerDay(
+							temp_min, temp_max, daySeven.getMillis());
+					daySevenList.add(weatherOncePerDay);
+				}
+			
 			}
+			
+			weeklyExtreme.add(this.maxMinForDay(dayOneList));
+			weeklyExtreme.add(this.maxMinForDay(dayTwoList));
+			weeklyExtreme.add(this.maxMinForDay(dayTreeList));
+			weeklyExtreme.add(this.maxMinForDay(dayFourList));
+			weeklyExtreme.add(this.maxMinForDay(dayFiveList));
+			weeklyExtreme.add(this.maxMinForDay(daySixList));
+			weeklyExtreme.add(this.maxMinForDay(daySevenList));
 
 			for (Weather wPom : weatherx) {
 				city.addWeather(wPom);
@@ -77,6 +152,10 @@ public class JSONParser {
 
 			System.out.println("ID grada" + city.getId());
 
+			for (WeatherOncePerDay wPom : weeklyExtreme) {
+				city.AddWeatherOncePerDay(wPom);
+			}
+			
 			cityRepository.save(city);
 
 		} catch (Exception e) {
@@ -126,8 +205,8 @@ public class JSONParser {
 				JsonObject main = (JsonObject) listEl.getAsJsonObject().get(
 						"main");
 
-				Double temp_min = main.get("temp_min").getAsDouble() - 273.15;
-				Double temp_max = main.get("temp_max").getAsDouble() - 273.15;
+				int temp_min = main.get("temp_min").getAsInt() - 273;
+				int temp_max = main.get("temp_max").getAsInt() - 273;
 				// temp_min
 
 				JsonElement dtj = listEl.getAsJsonObject().get("dt");
@@ -180,18 +259,6 @@ public class JSONParser {
 
 			}
 
-			System.out.println("Pocinje ispis iz liste!!!!!!!!!!");
-			int tr = 0;
-			for (WeatherOncePerDay pom : dayOneList) {
-				System.out.println("\nRedni broj merenja:" + i++);
-				System.out.println("\nTemperature MAX: " + pom.getTempMax());
-				System.out.println("\nTemperature MIN: " + pom.getTempMin());
-				System.out.println("\nDate of recording: " + pom.getDate());
-			}
-
-			System.out
-					.println("\n #########  KOJI SU NAM MAXIMALNI I MINIMALNI ZA DAN: ");
-
 			weeklyExtreme.add(this.maxMinForDay(dayOneList));
 			weeklyExtreme.add(this.maxMinForDay(dayTwoList));
 			weeklyExtreme.add(this.maxMinForDay(dayTreeList));
@@ -222,8 +289,8 @@ public class JSONParser {
 
 	public WeatherOncePerDay maxMinForDay(List<WeatherOncePerDay> listW) {
 
-		Double minTemp = 1000000.0;
-		Double maxTemp = -1000.0;
+		int minTemp = 1000000;
+		int maxTemp = -1000;
 		Long date = 0l;
 		for (WeatherOncePerDay help : listW) {
 			date = help.getDate();

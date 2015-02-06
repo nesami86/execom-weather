@@ -10,6 +10,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,8 @@ public class WeatherQueryInit {
 	private static Integer WEEK_IN_SEC = 604800;
 	private static Integer MONTH_IN_SEC = 2629744;
 	private static Integer YEAR_IN_SEC =  31536000;
-	private static Integer JAN_01_2015 = 1420070400;
+	private static Integer JAN_14_2015 = 1421193600;
+	private static Integer YEAR_AND_A_WEEK = 32161700;
 	@Autowired
 	JSONParser parser;
 	
@@ -39,15 +41,18 @@ public class WeatherQueryInit {
 			cities.add(2867993); // Stuttgart
 			cities.add(745044);  // Istanbul
 			
-			Integer toTime = JAN_01_2015 - 2*YEAR_IN_SEC; // krajnjeVreme
+			Integer toTime = JAN_14_2015 - 2*YEAR_AND_A_WEEK; // krajnjeVreme
 			
 			Integer fromTimeX = 0;
 			
-			for (int i = 0; i < 104; i++) {
+			for (int i = 0; i < 105; i++) {
 		
 				fromTimeX = toTime + WEEK_IN_SEC;
 			
 				for (int x : cities) {
+					
+					DateTime startDate = new DateTime(toTime * 1000L);
+					DateTime endDate = new DateTime(fromTimeX * 1000L);
 					
 					@SuppressWarnings("deprecation")
                     HttpClient client = new DefaultHttpClient();
@@ -61,12 +66,9 @@ public class WeatherQueryInit {
 					BufferedReader br = new BufferedReader(new InputStreamReader(
 							response.getEntity().getContent()));
 					
-				
-					
 					 jsonPoruka = br.readLine();
 					 
-					 
-					 parser.parser(jsonPoruka);
+					 parser.parser(jsonPoruka, startDate, endDate);
 				}
 				toTime = fromTimeX;
 				

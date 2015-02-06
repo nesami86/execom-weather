@@ -23,8 +23,8 @@ public class WeatherOncePerDay {
 	private Integer WeatherOnceADayId;
 
 	private Long date;
-	private Double tempMin;
-	private Double tempMax;
+	private int tempMin;
+	private int tempMax;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH,
 			CascadeType.MERGE, CascadeType.REFRESH })
@@ -40,19 +40,19 @@ public class WeatherOncePerDay {
 		WeatherOnceADayId = weatherOnceADayId;
 	}
 
-	public Double getTempMin() {
+	public int getTempMin() {
 		return tempMin;
 	}
 
-	public void setTempMin(Double tempMin) {
+	public void setTempMin(int tempMin) {
 		this.tempMin = tempMin;
 	}
 
-	public Double getTempMax() {
+	public int getTempMax() {
 		return tempMax;
 	}
 
-	public void setTempMax(Double tempMax) {
+	public void setTempMax(int tempMax) {
 		this.tempMax = tempMax;
 	}
 
@@ -75,7 +75,7 @@ public class WeatherOncePerDay {
 	public WeatherOncePerDay() {
 	}
 
-	public WeatherOncePerDay(Double tempMin, Double tempMax, Long date) {
+	public WeatherOncePerDay(int tempMin, int tempMax, Long date) {
 		super();
 
 		this.tempMin = tempMin;
