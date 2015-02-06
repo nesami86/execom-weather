@@ -17,43 +17,69 @@
         });
     }
     
-    function displayResults(a) {
-    	for (var i = 0; i < a.length; i++) {
-    		var date = new Date(a[i].date).toString().substring(0,21);
-    		var temperature = Math.round(a[i].temperature);   		
-    		fillWeatherTable(date, temperature);
-    	}
-    	$("#weatherReportTable").show();
+    function displayReport(a) {
+        for (var i = 0; i < a.length; i++) {
+            var date = new Date(a[i].date).toString().substring(0,21);
+            var temperature = Math.round(a[i].temperature);           
+            fillWeatherTable(date, temperature);
+        }
+        $("#weatherReportTable").show();
+    }       
+    
+    function fillForecastTable(a) {
+        for (var i=0; i<a.length; i++) {
+            var date = new Date(a[i].date).toString().substring(0,15);
+            var content = "<tr class='content'><td>" + date + "</td><td align='center'>" + 
+                          a[i].tempMin + "</td><td align='center'>" + a[i].tempMax + "</td></tr>";
+            $("#weatherForecastTable table").append(content);
+        }
+        $("#weatherForecastTable").show();
     }
     
     function fillWeatherTable(date, temperature) {
-    	if(date.indexOf("00:00") > -1)
+        if(date.indexOf("00:00") > -1)
             $("#weatherReportTable table").append("<tr class='content'><td> &nbsp; </td></tr>");
-    	
-    	var content = "<tr class='content'><td>" + date + "</td><td align='center'>" + temperature + "</td></tr>";
-    	$("#weatherReportTable table").append(content);
-    	
-    	if(date.indexOf("23:00") > -1)
-    		$("#weatherReportTable table").append("<tr class='content'><td> &nbsp; </td></tr>");	 
+        
+        var content = "<tr class='content'><td>" + date + "</td><td align='center'>" + temperature + "</td></tr>";
+        $("#weatherReportTable table").append(content);
+        
+        if(date.indexOf("23:00") > -1)
+            $("#weatherReportTable table").append("<tr class='content'><td> &nbsp; </td></tr>");     
     }
-
-    function getWeatherHistory() {
-
+    
+    function makeAjaxCall(url, callback) {       
         var weatherPeriod = { cityId : $("#city2").val(), startingDate : $("#date1").val(), endingDate : $("#date2").val() };
+        
+        if (weatherPeriod.endingDate == "")
+           weatherPeriod.endingDate = weatherPeriod.startingDate;
 
         $.ajax({
 
             type : "POST",
             contentType : "application/json; charset=utf-8",
-            url : "/weather/getPeriod",
+            url : url,
             data : JSON.stringify(weatherPeriod),
             dataType : "JSON"
 
         }).done(function(a) {
-        	displayResults(a);
+            call(callback, a);
         }).fail(function() {
             alert("Fail!");
         });
+    }
+    
+    function call(callback, a) {
+        if (callback == "forecast") {
+            fillForecastTable(a);
+        } else if (callback == "report") {
+            displayReport(a);
+        }
+    }
+    
+    function clearPage() {
+        $("tr.content").remove();
+        $("#weatherReportTable").hide();
+        $("#weatherForecastTable").hide();
     }
 
     $(document).ready(function() {
@@ -63,11 +89,15 @@
         });
 
         $("#getWeatherHistory").click(function() {
-            getWeatherHistory();
+            makeAjaxCall("/weather/getPeriod", "report");
+        });
+        
+        $("#getWeatherForecast").click(function() {
+            makeAjaxCall("/weather/getForecast", "forecast");
         });
         
         $("#clear").click(function(){
-        	$("tr.content").remove();
+            clearPage();
         });
     });
     //]]>
@@ -80,7 +110,7 @@
 
     <form action="/adminPage" method="POST">
         <button type="submit">Admin Log In</button>
-    </form>
+    </form> 
 
     <br />
 
@@ -93,17 +123,28 @@
 
     <div>
         <p>
-            Get weather report for <select id="city2">
+            Get weather report/forecast for <select id="city2">
             <option th:each="city:${ cities }" th:value="${ city.id }" th:text="${ city.id }"></option>
                 </select> from <input type="date" id="date1" /> to <input type="date" id="date2" />
 
-            <button id="getWeatherHistory">Get report</button>
+            &nbsp; <button id="getWeatherHistory">Get report</button>
+            &nbsp; <button id="getWeatherForecast">Get forecast</button>
         </p>
     </div>
     
-    <div id="weatherReportTable" style="display: none; z-index: 2;">
+    <div id="weatherReportTable" style="display: none;">
         <table>
             <tr><td align="center"><b>Time:</b></td><td align="center"><b>Temperature:</b></td></tr>
+        </table>
+    </div>
+    
+    <div id="weatherForecastTable" style="display: none;">
+        <table>
+            <tr>
+                <td align="center"><b>Time:</b></td>
+                <td align="center"><b>Min Temperature:</b></td>
+                <td align="center"><b>Max Temperature:</b></td>
+            </tr>
         </table>
     </div>
     

@@ -6,6 +6,7 @@ import java.util.List;
 import main.database.AdministratorRepository;
 import main.database.CityRepository;
 import main.entities.Weather;
+import main.entities.WeatherOncePerDay;
 import main.entities.WeatherPeriod;
 import main.weatherApplication.CurrentWeatherQuery;
 import main.weatherApplication.WeatherQuery;
@@ -73,5 +74,10 @@ public class WebController extends WebControllerAddMethods {
     @RequestMapping("/weather/getPeriod")
     public @ResponseBody List<Weather> getWeatherPeriod(@RequestBody WeatherPeriod weatherPeriod) {
         return weatherReader.getWeatherReports(weatherPeriod);
+    }
+    
+    @RequestMapping("/weather/getForecast")
+    public @ResponseBody List<WeatherOncePerDay> getWeatherForecast(@RequestBody WeatherPeriod weatherPeriod) {
+        return weatherReader.getWeatherForecast(weatherPeriod);
     }
 }
