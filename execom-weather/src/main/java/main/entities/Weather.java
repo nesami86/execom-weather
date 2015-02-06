@@ -21,12 +21,10 @@ public class Weather {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer weatherId;
     
-    private Long date;
-    private Double temperature;
-    private Double humidity;
-    private Double pressure;
-    private Double tempMin;
-    private Double tempMax;
+    private long date;
+    private int temperature;
+    private int humidity;
+    private int pressure;
     
     @ManyToOne(fetch=FetchType.LAZY, cascade={ CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
     @JoinColumn(name="city_id")
@@ -37,14 +35,14 @@ public class Weather {
         
     }
     
-    public Weather(Long date, Double temperature, Double humidity, Double pressure, Double temp_min, Double temp_max) {
+    public Weather(Integer weatherId, long date, int temperature, int humidity, int pressure, City city) {
         super();
+        this.weatherId = weatherId;
         this.date = date;
         this.temperature = temperature;
         this.humidity = humidity;
         this.pressure = pressure;
-        this.tempMin = temp_min;
-        this.tempMax = temp_max;
+        this.city = city;
     }
 
     public Integer getWeatherId() {
@@ -55,54 +53,37 @@ public class Weather {
         this.weatherId = weatherId;
     }
 
-    public Long getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(Long date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
-    public Double getTemperature() {
+    public int getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(Double temperature) {
+    public void setTemperature(int temperature) {
         this.temperature = temperature;
     }
 
-    public Double getHumidity() {
+    public int getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(Double humidity) {
+    public void setHumidity(int humidity) {
         this.humidity = humidity;
     }
 
-    public Double getPressure() {
+    public int getPressure() {
         return pressure;
     }
 
-    public void setPressure(Double pressure) {
+    public void setPressure(int pressure) {
         this.pressure = pressure;
     }
-
-    public Double getTempMin() {
-        return tempMin;
-    }
-
-    public void setTempMin(Double tempMin) {
-        this.tempMin = tempMin;
-    }
-
-    public Double getTempMax() {
-        return tempMax;
-    }
-
-    public void setTempMax(Double tempMax) {
-        this.tempMax = tempMax;
-    }
-
     public City getCity() {
         return city;
     }
@@ -114,6 +95,6 @@ public class Weather {
     @Override
     public String toString() {
         return "Weather [weatherId=" + weatherId + ", date=" + date + ", temperature=" + temperature + ", humidity=" + humidity
-                + ", pressure=" + pressure + ", tempMin=" + tempMin + ", tempMax=" + tempMax + ", city=" + city + "]";
+                + ", pressure=" + pressure + ", city=" + city + "]";
     }
 }
