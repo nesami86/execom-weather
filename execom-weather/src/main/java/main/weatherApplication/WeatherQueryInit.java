@@ -41,11 +41,11 @@ public class WeatherQueryInit {
 			cities.add(2867993); // Stuttgart
 			cities.add(745044);  // Istanbul
 			
-			Integer toTime = JAN_14_2015 - 2*YEAR_AND_A_WEEK; // krajnjeVreme
+			Integer toTime = JAN_14_2015 - 2*YEAR_IN_SEC; // krajnjeVreme
 			
 			Integer fromTimeX = 0;
 			
-			for (int i = 0; i < 105; i++) {
+			for (int i = 0; i < 104; i++) {
 		
 				fromTimeX = toTime + WEEK_IN_SEC;
 			
