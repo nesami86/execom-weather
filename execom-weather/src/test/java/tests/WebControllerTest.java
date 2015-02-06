@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.WebController;
+import main.beans.WeatherPeriod;
 import main.entities.Administrator;
 import main.entities.City;
 import main.entities.Weather;
-import main.entities.WeatherPeriod;
 import main.weatherApplication.JSONParser;
 import main.weatherApplication.WeatherQuery;
 import main.weatherApplication.WeatherQueryInit;

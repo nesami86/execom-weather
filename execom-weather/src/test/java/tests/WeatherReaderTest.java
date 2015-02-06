@@ -7,8 +7,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import main.WebController;
+import main.beans.WeatherPeriod;
 import main.entities.Weather;
-import main.entities.WeatherPeriod;
 import main.weatherApplication.JSONParser;
 import main.weatherApplication.WeatherQuery;
 import main.weatherApplication.WeatherQueryInit;

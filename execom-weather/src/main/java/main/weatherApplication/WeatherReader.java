@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import main.beans.WeatherPeriod;
+import main.beans.WeatherPeriodExtracted;
 import main.database.CityRepository;
 import main.database.WeatherOncePerDayRepository;
 import main.database.WeatherRepository;
 import main.entities.City;
 import main.entities.Weather;
 import main.entities.WeatherOncePerDay;
-import main.entities.WeatherPeriod;
-import main.entities.WeatherPeriodExtracted;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package main.entities;
+package main.beans;
 
 public class WeatherPeriod {
 
