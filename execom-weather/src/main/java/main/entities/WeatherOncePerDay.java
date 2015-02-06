@@ -9,28 +9,29 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-@Table(name="weatheronceperday")
+@Table(name = "weatheronceperday", uniqueConstraints = @UniqueConstraint(columnNames = {
+		"date", "city_id" }))
 public class WeatherOncePerDay {
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer WeatherOnceADayId;
-	
+
 	private Long date;
 	private Double tempMin;
 	private Double tempMax;
-	
 
-	@ManyToOne(fetch=FetchType.LAZY, cascade={ CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
-    @JoinColumn(name="city_id")
-    @JsonBackReference
-    private City city;
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH,
+			CascadeType.MERGE, CascadeType.REFRESH })
+	@JoinColumn(name = "city_id")
+	@JsonBackReference
+	private City city;
 
-	
 	public Integer getWeatherOnceADayId() {
 		return WeatherOnceADayId;
 	}
@@ -62,7 +63,7 @@ public class WeatherOncePerDay {
 	public void setCity(City city) {
 		this.city = city;
 	}
-	
+
 	public Long getDate() {
 		return date;
 	}
@@ -71,17 +72,15 @@ public class WeatherOncePerDay {
 		this.date = date;
 	}
 
-	public WeatherOncePerDay(){}
-	
-	public WeatherOncePerDay( Double tempMin,
-			Double tempMax, Long date) {
+	public WeatherOncePerDay() {
+	}
+
+	public WeatherOncePerDay(Double tempMin, Double tempMax, Long date) {
 		super();
+
 		this.tempMin = tempMin;
 		this.tempMax = tempMax;
 		this.date = date;
 	}
-	
-	
-	
 
 }

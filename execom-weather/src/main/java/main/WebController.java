@@ -7,6 +7,7 @@ import main.database.AdministratorRepository;
 import main.database.CityRepository;
 import main.entities.Weather;
 import main.entities.WeatherPeriod;
+import main.weatherApplication.CurrentWeatherQuery;
 import main.weatherApplication.WeatherQuery;
 import main.weatherApplication.WeatherQueryInit;
 import main.weatherApplication.WeatherReader;
@@ -37,9 +38,13 @@ public class WebController extends WebControllerAddMethods {
     @Autowired
     private WeatherReader weatherReader;
     
+    @Autowired
+    private CurrentWeatherQuery currentWeatherQuery;
+    
     @RequestMapping("/")
     public String welcomePage(Model model) throws IllegalStateException, IOException {
         model.addAttribute("cities", cityRepository.findAll());
+        currentWeatherQuery.currentQuerry();
         return "index";
     }
     
