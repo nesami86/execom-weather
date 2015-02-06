@@ -9,6 +9,8 @@ import main.beans.WeatherPeriod;
 import main.entities.Administrator;
 import main.entities.City;
 import main.entities.Weather;
+import main.entities.WeatherOncePerDay;
+import main.weatherApplication.CurrentWeatherQuery;
 import main.weatherApplication.JSONParser;
 import main.weatherApplication.WeatherQuery;
 import main.weatherApplication.WeatherQueryInit;
@@ -64,6 +66,11 @@ public class WebControllerTest {
         public JSONParser getJSONParserMock() {
             return mock(JSONParser.class);
         }
+        
+        @Bean
+        public CurrentWeatherQuery getCurrentWeatherQueryMock() {
+            return mock(CurrentWeatherQuery.class);
+        }
     }
     
     @Autowired
@@ -89,6 +96,9 @@ public class WebControllerTest {
     
     @Autowired
     private WeatherQuery weatherQuery;
+    
+    @Autowired
+    private CurrentWeatherQuery currentWeatherQuery;
     
     @Before
     public void setUp() {      
@@ -117,9 +127,15 @@ public class WebControllerTest {
     }
     
     @Test
-    public void getWeatherHistoryTest() throws IllegalStateException, IOException {
+    public void getFreshWeatherData() throws IllegalStateException, IOException {
         webController.getWeatherHistory();
         verify(weatherQueryInit).returnWeather();
+    }
+    
+    @Test
+    public void getFreshWeatherDataTest() throws IllegalStateException, IOException {
+        webController.getFreshWeatherData();
+        verify(currentWeatherQuery).currentQuerry();
     }
     
     @Test
@@ -128,5 +144,13 @@ public class WebControllerTest {
         when(weatherReader.getWeatherReports(weatherPeriod)).thenReturn(weather);
         
         assertEquals(weather,  webController.getWeatherPeriod(weatherPeriod));
+    }
+    
+    @Test
+    public void getWeatherForecastTest() {
+        List<WeatherOncePerDay> forecast = new ArrayList<WeatherOncePerDay>();      
+        when(weatherReader.getWeatherForecast(weatherPeriod)).thenReturn(forecast);
+        
+        assertEquals(forecast,  webController.getWeatherForecast(weatherPeriod));
     }
 }
