@@ -45,7 +45,6 @@ public class WebController extends WebControllerAddMethods {
     @RequestMapping("/")
     public String welcomePage(Model model) throws IllegalStateException, IOException {
         model.addAttribute("cities", cityRepository.findAll());
-        currentWeatherQuery.currentQuerry();
         return "index";
     }
     
@@ -69,6 +68,11 @@ public class WebController extends WebControllerAddMethods {
     @RequestMapping("/weather/getData")
     public void getWeatherHistory() throws IllegalStateException, IOException {
         weatherQueryInit.returnWeather();
+    }
+    
+    @RequestMapping("/weather/getFreshData")
+    public void getFreshWeatherData() throws IllegalStateException, IOException {
+        currentWeatherQuery.currentQuerry();
     }
     
     @RequestMapping("/weather/getPeriod")
