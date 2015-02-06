@@ -26,10 +26,13 @@
     	$("#weatherReportTable").show();
     }
     
-    function displayForecast(a) {
-    	for (var i = 0; i < a.length; i++) {
-    		alert(a[i].tempMax);
-    	}
+    function fillForecastTable(a) {
+    	var date = new Date(a.date).toString().substring(0,15);
+    	var content = "<tr class='content'><td>" + date + "</td><td align='center'>" + 
+                      a.tempMin + "</td><td align='center'>" + a.tempMax + "</td></tr>";
+        $("#weatherForecastTable table").append(content);
+        
+        $("#weatherForecastTable").show();
     }
     
     function fillWeatherTable(date, temperature) {
@@ -41,14 +44,6 @@
     	
     	if(date.indexOf("23:00") > -1)
     		$("#weatherReportTable table").append("<tr class='content'><td> &nbsp; </td></tr>");	 
-    }
-
-    function getWeatherHistory() {
-        makeAjaxCall("/weather/getPeriod", "report");
-    }
-    
-    function getWeatherForecast() {
-    	makeAjaxCall("/weather/getForecast", "forecast");
     }
     
     function makeAjaxCall(url, callback) {
@@ -71,10 +66,16 @@
     
     function call(callback, a) {
     	if (callback == "forecast") {
-    		displayForecast(a);
+    		fillForecastTable(a);
     	} else if (callback == "report") {
     		displayReport(a);
     	}
+    }
+    
+    function clearPage() {
+    	$("tr.content").remove();
+        $("#weatherReportTable").hide();
+        $("#weatherForecastTable").hide();
     }
 
     $(document).ready(function() {
@@ -84,15 +85,15 @@
         });
 
         $("#getWeatherHistory").click(function() {
-            getWeatherHistory();
+        	makeAjaxCall("/weather/getPeriod", "report");
         });
         
         $("#getWeatherForecast").click(function() {
-        	getWeatherForecast();
+        	makeAjaxCall("/weather/getForecast", "forecast");
         });
         
         $("#clear").click(function(){
-        	$("tr.content").remove();
+        	clearPage();
         });
     });
     //]]>
@@ -127,9 +128,19 @@
         </p>
     </div>
     
-    <div id="weatherReportTable" style="display: none; z-index: 2;">
+    <div id="weatherReportTable" style="display: none;">
         <table>
             <tr><td align="center"><b>Time:</b></td><td align="center"><b>Temperature:</b></td></tr>
+        </table>
+    </div>
+    
+    <div id="weatherForecastTable" style="display: none;">
+        <table>
+            <tr>
+                <td align="center"><b>Time:</b></td>
+                <td align="center"><b>Min Temperature:</b></td>
+                <td align="center"><b>Max Temperature:</b></td>
+            </tr>
         </table>
     </div>
     

@@ -33,13 +33,6 @@ public class WeatherReader {
     @Autowired
     private WeatherOncePerDayRepository dailyWeatherRepository;
     
-    public List<WeatherOncePerDay> getWeatherForecast(WeatherPeriod weatherPeriod) {
-//        WeatherPeriodExtracted wpe = extractWeatherPeriod(weatherPeriod);
-        
-        
-        return new ArrayList<WeatherOncePerDay>();
-    }
-    
     public List<Weather> getWeatherReports(WeatherPeriod weatherPeriod){
         WeatherPeriodExtracted wpe = extractWeatherPeriod(weatherPeriod);
         return weatherRepository.findByCityAndDateBetween(wpe.getCity(), wpe.getStDate(), wpe.getEndDate());
@@ -55,7 +48,7 @@ public class WeatherReader {
     }
     
     public long getUnixTime(String date) {
-        return getDate(date).getTimeInMillis();
+        return getDate(date).getTimeInMillis() + 3600000;
     }
     
     public Calendar getDate(String date) {
@@ -68,5 +61,43 @@ public class WeatherReader {
             e.printStackTrace();
         }
         return calendar;
+    }
+    
+    public WeatherOncePerDay getWeatherForecast(WeatherPeriod weatherPeriod) {
+        WeatherPeriodExtracted wpe = extractWeatherPeriod(weatherPeriod);        
+        return makeForecast(wpe);
+    }
+    
+    public WeatherOncePerDay makeForecast(WeatherPeriodExtracted wpe) {
+        List<WeatherOncePerDay> forecastData = getForecastData(wpe);
+        Double tempMin = 0.0;
+        Double tempMax = 0.0;
+        int counter = 1;
+        
+        for (int i=0; i<forecastData.size(); i++) {
+            tempMin += forecastData.get(i).getTempMin();
+            tempMax += forecastData.get(i).getTempMax();
+            counter = i + 1;
+        }
+        tempMin = tempMin/counter;
+        tempMax = tempMax/counter;
+        
+        return new WeatherOncePerDay(tempMin, tempMax, wpe.getStDate());
+    }
+    
+    public List<WeatherOncePerDay> getForecastData(WeatherPeriodExtracted wpe) {
+        List<WeatherOncePerDay> forecastData = new ArrayList<WeatherOncePerDay>();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(wpe.getStDate());
+        
+        for (int i=0; i<10; i++) {
+            WeatherOncePerDay forecastDay = dailyWeatherRepository.findByCityAndDate(wpe.getCity(), calendar.getTimeInMillis());
+            
+            if (forecastDay != null) {
+                forecastData.add(forecastDay);
+            }
+            calendar.add(Calendar.YEAR, -1);
+        } 
+        return forecastData;
     }
 }
