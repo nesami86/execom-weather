@@ -12,7 +12,6 @@ import main.entities.Weather;
 import main.entities.WeatherOncePerDay;
 import main.weatherApplication.CurrentWeatherQuery;
 import main.weatherApplication.JSONParser;
-import main.weatherApplication.WeatherQuery;
 import main.weatherApplication.WeatherQueryInit;
 import main.weatherApplication.WeatherReader;
 
@@ -48,17 +47,12 @@ public class WebControllerTest {
         }
         
         @Bean
-        public WeatherQuery getWeatherQueryMock() {
-            return mock(WeatherQuery.class);
-        }
-        
-        @Bean
         public WeatherQueryInit getWeatherQueryInitMock() {
             return mock(WeatherQueryInit.class);
         }
         
         @Bean
-        public WeatherReader getWeatherDispatcherMock() {
+        public WeatherReader getWeatherReaderMock() {
             return mock(WeatherReader.class);
         }
         
@@ -93,10 +87,7 @@ public class WebControllerTest {
     
     @Autowired
     private WeatherPeriod weatherPeriod;
-    
-    @Autowired
-    private WeatherQuery weatherQuery;
-    
+        
     @Autowired
     private CurrentWeatherQuery currentWeatherQuery;
     
@@ -120,12 +111,7 @@ public class WebControllerTest {
     public void adminPageTest() {
         assertEquals("adminPage", webController.adminPage(model));
     }
-    
-    @Test
-    public void getWeatherReportTest() throws IllegalStateException, IOException {
-        assertEquals("Novi Sad", webController.getWeatherReport("Novi Sad"));
-    }
-    
+        
     @Test
     public void getFreshWeatherData() throws IllegalStateException, IOException {
         webController.getWeatherHistory();

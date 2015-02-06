@@ -7,16 +7,7 @@
 
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script type="text/javascript">
-    //<![CDATA[
-    function getWeatherReport() {
-
-        $.get("/weather/report?city=" + $("#city").val(), {}, function(a) {
-            alert(a);
-        }).fail(function() {
-            alert("Fail!");
-        });
-    }
-    
+    //<![CDATA[ 
     function displayReport(a) {
         for (var i = 0; i < a.length; i++) {
             var date = new Date(a[i].date).toString().substring(0,21);
@@ -84,10 +75,6 @@
 
     $(document).ready(function() {
 
-        $("#getWeather").click(function() {
-            getWeatherReport();
-        });
-
         $("#getWeatherHistory").click(function() {
             makeAjaxCall("/weather/getPeriod", "report");
         });
@@ -112,15 +99,8 @@
         <button type="submit">Admin Log In</button>
     </form> 
 
-    <br />
-
-    <div>
-        <input type="text" id="city" placeHolder="Enter city name ... " />
-        <button id="getWeather">Get weather report</button>
-    </div>
-
-    <br />
-
+    <br /><br />
+    
     <div>
         <p>
             Get weather report/forecast for <select id="city2">

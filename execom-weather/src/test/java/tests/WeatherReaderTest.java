@@ -9,8 +9,8 @@ import java.util.List;
 import main.WebController;
 import main.beans.WeatherPeriod;
 import main.entities.Weather;
+import main.weatherApplication.CurrentWeatherQuery;
 import main.weatherApplication.JSONParser;
-import main.weatherApplication.WeatherQuery;
 import main.weatherApplication.WeatherQueryInit;
 import main.weatherApplication.WeatherReader;
 
@@ -43,12 +43,7 @@ public class WeatherReaderTest {
         public WebController getWebControllerMock() {
             return mock(WebController.class);
         }
-        
-        @Bean
-        public WeatherQuery getWeatherQueryMock() {
-            return mock(WeatherQuery.class);
-        }
-        
+                
         @Bean
         public WeatherQueryInit getWeatherQueryInitMock() {
             return mock(WeatherQueryInit.class);
@@ -57,6 +52,11 @@ public class WeatherReaderTest {
         @Bean
         public JSONParser getJSONParserMock() {
             return mock(JSONParser.class);
+        }
+        
+        @Bean
+        public CurrentWeatherQuery getCurrentWeatherQueryMock() {
+            return mock(CurrentWeatherQuery.class);
         }
     }
     

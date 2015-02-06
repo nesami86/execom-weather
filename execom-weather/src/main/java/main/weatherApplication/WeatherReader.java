@@ -99,8 +99,8 @@ public class WeatherReader {
     
     public WeatherOncePerDay makeForecast(City city, long date) {
         List<WeatherOncePerDay> forecastData = getForecastData(city, date);
-        Double tempMin = 0.0;
-        Double tempMax = 0.0;
+        int tempMin = 0;
+        int tempMax = 0;
         int counter = 1;
         
         for (int i=0; i<forecastData.size(); i++) {
@@ -108,8 +108,8 @@ public class WeatherReader {
             tempMax += forecastData.get(i).getTempMax();
             counter = i + 1;
         }
-        tempMin = tempMin/counter;
-        tempMax = tempMax/counter;
+        tempMin = Math.round(tempMin/counter);
+        tempMax = Math.round(tempMax/counter);
         
         return new WeatherOncePerDay(tempMin, tempMax, date);
     }
