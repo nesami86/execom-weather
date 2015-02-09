@@ -16,63 +16,72 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class WeatherQueryInit {
+
 	private static Integer DAY_IN_SEC = 86400;
 	private static Integer WEEK_IN_SEC = 604800;
 	private static Integer MONTH_IN_SEC = 2629744;
 	private static Integer YEAR_IN_SEC =  31536000;
-	private static Integer JAN_14_2015 = 1421193600;
+	private static Integer JAN_1_2015 = 1420070400;
 	private static Integer YEAR_AND_A_WEEK = 32161700;
 	@Autowired
 	JSONParser parser;
-	
+
 	private static String jsonPoruka ="";
 	private static List<Integer> cities = new ArrayList<Integer>();
-	
+
 	@SuppressWarnings("resource")
 	public void returnWeather() throws IllegalStateException, IOException{
-			cities.add(764679); // Minsk
-			cities.add(524901); // MOSKVA
-			cities.add(792680); // BEOGRAD
-			cities.add(2969284); // Vienne
-			cities.add(3996933); // Madrid
-			cities.add(4219762); // Rome
-			cities.add(2673730); // Stockholm
-			cities.add(5245497); // Berlin
-			cities.add(2867993); // Stuttgart
-			cities.add(745044);  // Istanbul
-			
-			Integer toTime = JAN_14_2015 - 2*YEAR_IN_SEC; // krajnjeVreme
-			
-			Integer fromTimeX = 0;
-			
-			for (int i = 0; i < 104; i++) {
-		
-				fromTimeX = toTime + WEEK_IN_SEC;
-			
-				for (int x : cities) {
-					
-					DateTime startDate = new DateTime(toTime * 1000L);
-					DateTime endDate = new DateTime(fromTimeX * 1000L);
-					
-					@SuppressWarnings("deprecation")
-                    HttpClient client = new DefaultHttpClient();
-					
-					String query = "http://api.openweathermap.org/data/2.5/history/city?id="+x+"&type=day&start=" + toTime + "&end=" + fromTimeX
-							+ "&APPID=c63f2ee343e3f8ce3a7e452d8f9ad08d";
-					
-					HttpGet request = new HttpGet(query);
-				
-					HttpResponse response = client.execute(request);
-					BufferedReader br = new BufferedReader(new InputStreamReader(
-							response.getEntity().getContent()));
-					
-					 jsonPoruka = br.readLine();
-					 
-					 parser.parser(jsonPoruka, startDate, endDate);
+		cities.add(764679); // Minsk
+		cities.add(524901); // MOSKVA
+		cities.add(792680); // BEOGRAD
+		cities.add(2969284); // Vienne
+		cities.add(3996933); // Madrid
+		cities.add(4219762); // Rome
+		cities.add(2673730); // Stockholm
+		cities.add(5245497); // Berlin
+		cities.add(2867993); // Stuttgart
+		cities.add(745044);  // Istanbul
+
+		Integer toTime = JAN_1_2015 - 2*YEAR_IN_SEC; // krajnjeVreme
+
+		Integer fromTimeX = 0;
+
+		for (int i = 0; i < 104; i++) {
+
+			fromTimeX = toTime + WEEK_IN_SEC;
+
+			for (int x : cities) {
+
+				DateTime startDate = new DateTime(toTime * 1000L);
+				DateTime endDate = new DateTime(fromTimeX * 1000L);
+
+				@SuppressWarnings("deprecation")
+				HttpClient client = new DefaultHttpClient();
+
+				String query = "http://api.openweathermap.org/data/2.5/history/city?id="+x+"&type=day&start=" + toTime + "&end=" + fromTimeX
+						+ "&APPID=c63f2ee343e3f8ce3a7e452d8f9ad08d";
+
+				HttpGet request = new HttpGet(query);
+
+				HttpResponse response = client.execute(request);
+				BufferedReader br = new BufferedReader(new InputStreamReader(
+						response.getEntity().getContent()));
+
+				String line = null;
+				while((line = br.readLine()) != null){
+					jsonPoruka += line;
 				}
-				toTime = fromTimeX;
 				
-			}
+				//String[] stringArray = jsonPoruka.split("{\"message\"");
+				String[] stringArray = jsonPoruka.split("}]}");
+				
+				for(String s: stringArray){
+				parser.parser(s+"}]}", startDate, endDate);
+				}
+				}
+			toTime = fromTimeX;
+
+		}
 	}
 	
 }

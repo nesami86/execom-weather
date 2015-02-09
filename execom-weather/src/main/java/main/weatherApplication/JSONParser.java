@@ -17,7 +17,9 @@ import org.springframework.stereotype.Component;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
 @Component
@@ -30,29 +32,33 @@ public class JSONParser {
 			DateTime endDate) {
 
 		JsonParser jsonParser = new JsonParser();
-		try {
-			JsonReader jsonReader = new JsonReader(new StringReader(jsonPoruka)); // mozda
-																					// ovo
-																					// resava
-																					// problem
-			jsonReader.setLenient(true);
-			// jsonReader.
-			JsonObject glavni = jsonParser.parse(jsonReader).getAsJsonObject();
 
-			int cod = glavni.get("cod").getAsInt();
-			int cityID = glavni.get("city_id").getAsInt();
+		System.out.println(jsonPoruka);
+		JsonReader jsonReader = new JsonReader(new StringReader(jsonPoruka)); // mozda
+		// ovo
+		// resava
+		// problem
+		jsonReader.setLenient(true);
+		// jsonReader.
+		try{
+			JsonObject fullMessageJson = jsonParser.parse(jsonReader).getAsJsonObject();
+
+			int cod = fullMessageJson.get("cod").getAsInt();
+			int cityID = fullMessageJson.get("city_id").getAsInt();
 
 			City city = new City(cityID, cod);
 
 			System.out
-					.println("  PODACI O GRADU NA OSNOVU PARSIRANIH PODATAK : "
-							+ city);
-
-			JsonArray measurements = jsonParser.parse(jsonPoruka)
-					.getAsJsonObject().getAsJsonArray("list");
-
-			List<Weather> weatherx = new ArrayList<Weather>();
+			.println("  PODACI O GRADU NA OSNOVU PARSIRANIH PODATAKA : "
+					+ city);
+			JsonArray measurements = null;
 			
+			 measurements = jsonParser.parse(jsonPoruka)
+					.getAsJsonObject().getAsJsonArray("list");
+			
+			
+			List<Weather> weatherx = new ArrayList<Weather>();
+
 			DateTime dayOne = startDate;// new DateTime(1420156800*1000L);
 			DateTime dayTwo = startDate.plusDays(1);
 			DateTime dayTree = startDate.plusDays(2);
@@ -73,27 +79,56 @@ public class JSONParser {
 			List<WeatherOncePerDay> daySevenList = new ArrayList<WeatherOncePerDay>();
 
 			List<WeatherOncePerDay> weeklyExtreme = new ArrayList<WeatherOncePerDay>();
-			
+
 			for (JsonElement listEl : measurements) {
 				JsonObject main = (JsonObject) listEl.getAsJsonObject().get(
 						"main");
 
-				int temp = main.get("temp").getAsInt() - 273;
-				int humidity = main.get("humidity").getAsInt();
-				int pressure = main.get("pressure").getAsInt();
-				
-				int temp_min = main.get("temp_min").getAsInt() - 273;
-				int temp_max = main.get("temp_max").getAsInt() - 273;
+				int temp = -1000;
+				try{
+					temp = main.get("temp").getAsInt() - 273;
+				}catch(NullPointerException npe){
+					System.out.println("\nNo value returned for temperature.");
+				}
+
+				int humidity = -100; // Initial value if we don't get return value for humidity;
+				try{
+					humidity = main.get("humidity").getAsInt();
+				} catch(NullPointerException npe){
+					System.out.println("\nNo value returned for humidity.");
+				}
+				int pressure = -1000;
+				try{
+					pressure = main.get("pressure").getAsInt();
+				} catch(NullPointerException npe){
+					System.out.println("\nNo value returned for pressure.");
+				}
+
+				int temp_min = -1000;
+				try{
+					temp_min = main.get("temp_min").getAsInt() - 273;
+				} catch(NullPointerException npe){
+					System.out.println("\nNo value returned for minimum temperature.");
+				}
+				int temp_max = -1000; 
+				try{
+					temp_max = main.get("temp_max").getAsInt() - 273;
+				} catch(NullPointerException npe){
+					System.out.println("\nNo value returned for maximum temperature.");
+				}
 
 				JsonElement dtj = listEl.getAsJsonObject().get("dt");
 
 				Long dt = dtj.getAsLong(); // ovo bi ovako bilo u sekundama
 				dt = dt * 1000L;
 				Weather wx = new Weather(dt, temp, humidity, pressure);
+				//	wx.setDate(dt);
+				//	wx.setTemperature(temp);
+				//	wx.setHumidity(humidity);
 
 				DateTime testDate = new DateTime(dt);
 				weatherx.add(wx);
-			
+
 				if (testDate.isAfter(dayOne) && testDate.isBefore(dayTwo)) {
 					WeatherOncePerDay weatherOncePerDay = new WeatherOncePerDay(
 							temp_min, temp_max, dayOne.getMillis());
@@ -135,9 +170,9 @@ public class JSONParser {
 							temp_min, temp_max, daySeven.getMillis());
 					daySevenList.add(weatherOncePerDay);
 				}
-			
+
 			}
-			
+
 			weeklyExtreme.add(this.maxMinForDay(dayOneList));
 			weeklyExtreme.add(this.maxMinForDay(dayTwoList));
 			weeklyExtreme.add(this.maxMinForDay(dayTreeList));
@@ -155,12 +190,20 @@ public class JSONParser {
 			for (WeatherOncePerDay wPom : weeklyExtreme) {
 				city.AddWeatherOncePerDay(wPom);
 			}
-			
-			cityRepository.save(city);
-
-		} catch (Exception e) {
-			System.out.println("Ono sto smo dobili nije json poruka");
+			try{
+				cityRepository.save(city);
+			}catch(Exception e){
+				System.out.println("MySQLIntegrityConstraintViolationException: Duplicate entry for key");
+			}
+		}catch(IllegalStateException isE){
+			System.out.println("IllegalStateException: Not a JSON Object: failed");
+		}catch(JsonSyntaxException mjE){
+			mjE.printStackTrace();
 		}
+		catch(JsonParseException jpE){
+			jpE.printStackTrace();
+		}
+
 	}
 
 	public void CurrentMesurementParser(String jsonPoruka, DateTime startDate,
