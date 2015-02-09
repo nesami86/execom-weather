@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.WebController;
+import main.beans.WeatherPeriod;
 import main.entities.Administrator;
 import main.entities.City;
 import main.entities.Weather;
-import main.entities.WeatherPeriod;
+import main.entities.WeatherOncePerDay;
+import main.weatherApplication.CurrentWeatherQuery;
 import main.weatherApplication.JSONParser;
-import main.weatherApplication.WeatherQuery;
 import main.weatherApplication.WeatherQueryInit;
 import main.weatherApplication.WeatherReader;
 
@@ -46,23 +47,23 @@ public class WebControllerTest {
         }
         
         @Bean
-        public WeatherQuery getWeatherQueryMock() {
-            return mock(WeatherQuery.class);
-        }
-        
-        @Bean
         public WeatherQueryInit getWeatherQueryInitMock() {
             return mock(WeatherQueryInit.class);
         }
         
         @Bean
-        public WeatherReader getWeatherDispatcherMock() {
+        public WeatherReader getWeatherReaderMock() {
             return mock(WeatherReader.class);
         }
         
         @Bean
         public JSONParser getJSONParserMock() {
             return mock(JSONParser.class);
+        }
+        
+        @Bean
+        public CurrentWeatherQuery getCurrentWeatherQueryMock() {
+            return mock(CurrentWeatherQuery.class);
         }
     }
     
@@ -86,9 +87,9 @@ public class WebControllerTest {
     
     @Autowired
     private WeatherPeriod weatherPeriod;
-    
+        
     @Autowired
-    private WeatherQuery weatherQuery;
+    private CurrentWeatherQuery currentWeatherQuery;
     
     @Before
     public void setUp() {      
@@ -110,16 +111,17 @@ public class WebControllerTest {
     public void adminPageTest() {
         assertEquals("adminPage", webController.adminPage(model));
     }
-    
+        
     @Test
-    public void getWeatherReportTest() throws IllegalStateException, IOException {
-        assertEquals("Novi Sad", webController.getWeatherReport("Novi Sad"));
+    public void getFreshWeatherData() throws IllegalStateException, IOException {
+        webController.getWeatherHistory();
+        verify(weatherQueryInit).returnWeather();
     }
     
     @Test
-    public void getWeatherHistoryTest() throws IllegalStateException, IOException {
-        webController.getWeatherHistory();
-        verify(weatherQueryInit).returnWeather();
+    public void getFreshWeatherDataTest() throws IllegalStateException, IOException {
+        webController.getFreshWeatherData();
+        verify(currentWeatherQuery).currentQuerry();
     }
     
     @Test
@@ -128,5 +130,13 @@ public class WebControllerTest {
         when(weatherReader.getWeatherReports(weatherPeriod)).thenReturn(weather);
         
         assertEquals(weather,  webController.getWeatherPeriod(weatherPeriod));
+    }
+    
+    @Test
+    public void getWeatherForecastTest() {
+        List<WeatherOncePerDay> forecast = new ArrayList<WeatherOncePerDay>();      
+        when(weatherReader.getWeatherForecast(weatherPeriod)).thenReturn(forecast);
+        
+        assertEquals(forecast,  webController.getWeatherForecast(weatherPeriod));
     }
 }

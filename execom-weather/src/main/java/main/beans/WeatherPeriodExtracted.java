@@ -1,4 +1,6 @@
-package main.entities;
+package main.beans;
+
+import main.entities.City;
 
 public class WeatherPeriodExtracted {
 

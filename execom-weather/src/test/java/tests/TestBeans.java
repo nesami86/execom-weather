@@ -1,11 +1,12 @@
 package tests;
 
+import main.beans.WeatherPeriod;
 import main.database.AdministratorRepository;
 import main.database.CityRepository;
+import main.database.WeatherOncePerDayRepository;
 import main.database.WeatherRepository;
 import main.entities.Administrator;
 import main.entities.City;
-import main.entities.WeatherPeriod;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,5 +56,10 @@ public class TestBeans {
     @Bean
     public WeatherPeriod getWeatherPeriodMock() {
         return mock(WeatherPeriod.class);
+    }
+    
+    @Bean
+    public WeatherOncePerDayRepository getWeatherOncePerDayRepositoryMock() {
+        return mock(WeatherOncePerDayRepository.class);
     }
 }
