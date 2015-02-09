@@ -3,6 +3,7 @@ package main.database;
 import main.entities.City;
 import main.entities.WeatherOncePerDay;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.stereotype.Component;
 
@@ -10,4 +11,7 @@ import org.springframework.stereotype.Component;
 public interface WeatherOncePerDayRepository extends Repository<WeatherOncePerDay, Long> {
 
     WeatherOncePerDay findByCityAndDate(City city, long date);
+    
+    @Query("SELECT MAX(date) FROM WeatherOncePerDay")
+    public Long findWeatherDate();
 }
