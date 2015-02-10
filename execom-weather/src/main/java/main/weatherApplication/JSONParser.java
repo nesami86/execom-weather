@@ -247,9 +247,13 @@ public class JSONParser {
 				JsonObject main = (JsonObject) listEl.getAsJsonObject().get(
 						"main");
 
+				
+				
 				int temp_min = main.get("temp_min").getAsInt() - 273;
 				int temp_max = main.get("temp_max").getAsInt() - 273;
 
+				
+				
 				JsonElement dtj = listEl.getAsJsonObject().get("dt");
 
 				Long dt = dtj.getAsLong();

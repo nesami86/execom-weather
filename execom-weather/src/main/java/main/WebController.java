@@ -43,17 +43,6 @@ public class WebController extends WebControllerAddMethods {
         return "index";
     }
     
-    @RequestMapping("/login")
-    public String loginPage() {
-        return "login";
-    }
-    
-    @RequestMapping("/adminPage")
-    public String adminPage(Model model) {
-        model.addAttribute("admin", adminRepo.findByAdministratorUsername(getAuthenticatedUsersName()));
-        return "adminPage";
-    }
-        
     @RequestMapping("/weather/getData")
     public void getWeatherHistory() throws IllegalStateException, IOException {
         weatherQueryInit.returnWeather();

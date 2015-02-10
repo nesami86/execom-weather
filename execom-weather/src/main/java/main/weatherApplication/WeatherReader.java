@@ -7,7 +7,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import main.beans.WeatherPeriod;
-import main.beans.WeatherPeriodExtracted;
 import main.database.CityRepository;
 import main.database.WeatherOncePerDayRepository;
 import main.database.WeatherRepository;
@@ -34,18 +33,9 @@ public class WeatherReader {
 	private WeatherOncePerDayRepository dailyWeatherRepository;
 
 	public List<Weather> getWeatherReports(WeatherPeriod weatherPeriod){
-		WeatherPeriodExtracted wpe = extractWeatherPeriod(weatherPeriod);
-		return weatherRepository.findByCityAndDateBetween(wpe.getCity(), wpe.getStDate(), wpe.getEndDate());
-	}
-
-	public WeatherPeriodExtracted extractWeatherPeriod(WeatherPeriod weatherPeriod) {
-		Integer cityId = Integer.parseInt(weatherPeriod.getCityId());
-		City city = cityRepository.findByCityId(cityId);
-		long startingDate = getUnixTime(weatherPeriod.getStartingDate());
-		long endingDate = getUnixTime(weatherPeriod.getEndingDate());
-		endingDate = adjustEndingDate(endingDate, startingDate);
-
-		return new WeatherPeriodExtracted(city, startingDate, endingDate);
+		City city = cityRepository.findByCityId((Integer.parseInt(weatherPeriod.getCityId())));
+		return weatherRepository.findByCityAndDateBetween(city, getUnixTime(weatherPeriod.getStartingDate()),
+				getUnixTime(weatherPeriod.getEndingDate()));
 	}
 
 	public long getUnixTime(String date) {
@@ -76,20 +66,23 @@ public class WeatherReader {
 
 	public List<WeatherOncePerDay> getWeatherForecast(WeatherPeriod weatherPeriod) {
 		List<WeatherOncePerDay> daysPredicted = new ArrayList<WeatherOncePerDay>();
-		WeatherPeriodExtracted wpe = extractWeatherPeriod(weatherPeriod);  
-		List<Calendar> days = getDaysForPrediction(wpe);
 
+		List<Calendar> days = getDaysForPrediction(getUnixTime(weatherPeriod.getStartingDate()), 
+				getUnixTime(weatherPeriod.getEndingDate()));
+
+		City city = cityRepository.findByCityId((Integer.parseInt(weatherPeriod.getCityId())));
+		
 		for (Calendar day : days) {
-			WeatherOncePerDay dailyWeather = makeForecast(wpe.getCity(), day.getTimeInMillis());
+			WeatherOncePerDay dailyWeather = makeForecast(city, day.getTimeInMillis());
 			daysPredicted.add(dailyWeather);
 		}
 		return daysPredicted;
 	}
 
-	public List<Calendar> getDaysForPrediction(WeatherPeriodExtracted wpe) {
+	public List<Calendar> getDaysForPrediction(Long startDate, Long endDate) {
 		List<Calendar> days = new ArrayList<Calendar>();
 
-		for (long date = wpe.getStDate(); date < wpe.getEndDate(); date += 86400000) {
+		for (long date = startDate; date < endDate; date += 86400000) {
 			Calendar day = Calendar.getInstance();
 			day.setTimeInMillis(date);
 			days.add(day);

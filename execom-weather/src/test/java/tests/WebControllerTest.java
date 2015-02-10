@@ -21,9 +21,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.ui.Model;
@@ -91,25 +88,9 @@ public class WebControllerTest {
     @Autowired
     private CurrentWeatherQuery currentWeatherQuery;
     
-    @Before
-    public void setUp() {      
-        Authentication auth = new UsernamePasswordAuthenticationToken(admin,null);
-        SecurityContextHolder.getContext().setAuthentication(auth);
-    }
-    
     @Test
     public void welcomePageTest() throws IllegalStateException, IOException {
         assertEquals("index", webController.welcomePage(model));
-    }
-    
-    @Test
-    public void loginPageTest() {
-        assertEquals("login", webController.loginPage());
-    }
-    
-    @Test
-    public void adminPageTest() {
-        assertEquals("adminPage", webController.adminPage(model));
     }
         
     @Test

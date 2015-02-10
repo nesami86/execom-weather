@@ -9,6 +9,32 @@
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script type="text/javascript">
     //<![CDATA[ 
+               
+    function getWeatherReport() {
+
+		$.get("/weather/getData").fail(function() {
+			alert("Fail!");
+		});
+	}
+	
+	function getFreshData() {
+
+        $.get("/weather/getFreshData").fail(function() {
+            alert("Fail!");
+        });
+    }
+
+	$(document).ready(function() {
+
+		$("#getData").click(function() {
+			getWeatherReport();
+		});
+		
+		$("#getFreshData").click(function() {
+		    getFreshData();
+        });
+	});
+               
     function displayReport(a) {
         for (var i = 0; i < a.length; i++) {
             var date = new Date(a[i].date).toString().substring(0,21);
@@ -94,14 +120,18 @@
 <body>
 	<h3>Welcome to Execom Weather application</h3>
 
+	
+	<br />
+	
 	<br />
 
-	<form action="/adminPage" method="POST">
-		<button type="submit">Admin Log In</button>
-	</form>
+	<button id="getData">Get data</button>
+    
+    <br /><br />
+    
+    <button id="getFreshData">Get fresh data</button>
 
-	<br />
-	<br />
+	<br /><br />
 
 	<div>
 		<p>

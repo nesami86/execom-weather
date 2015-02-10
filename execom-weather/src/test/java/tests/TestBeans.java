@@ -10,7 +10,6 @@ import main.entities.City;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 
 import static org.mockito.Mockito.mock;
@@ -33,10 +32,7 @@ public class TestBeans {
         return mock(Administrator.class);
     }
     
-    @Bean 
-    public UserDetails getUserDetailsMock() {
-        return mock(UserDetails.class);
-    }
+   
     
     @Bean
     public City getCityMock() {
