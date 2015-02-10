@@ -9,38 +9,38 @@ import javax.persistence.Table;
 @Table(name="administrators")
 public class Administrator {
 
-    @Id
-    @GeneratedValue
-    private long administratorId;
-    
-    private String administratorUsername;
-    private String administratorPassword;
-    
-    public Administrator() {
-        
-    }
+	@Id
+	@GeneratedValue
+	private long administratorId;
 
-    public long getAdministratorId() {
-        return administratorId;
-    }
+	private String administratorUsername;
+	private String administratorPassword;
 
-    public void setAdministratorId(long administratorId) {
-        this.administratorId = administratorId;
-    }
+	public Administrator() {
 
-    public String getAdministratorUsername() {
-        return administratorUsername;
-    }
+	}
 
-    public void setAdministratorUsername(String administratorUsername) {
-        this.administratorUsername = administratorUsername;
-    }
+	public long getAdministratorId() {
+		return administratorId;
+	}
 
-    public String getAdministratorPassword() {
-        return administratorPassword;
-    }
+	public void setAdministratorId(long administratorId) {
+		this.administratorId = administratorId;
+	}
 
-    public void setAdministratorPassword(String administratorPassword) {
-        this.administratorPassword = administratorPassword;
-    }
+	public String getAdministratorUsername() {
+		return administratorUsername;
+	}
+
+	public void setAdministratorUsername(String administratorUsername) {
+		this.administratorUsername = administratorUsername;
+	}
+
+	public String getAdministratorPassword() {
+		return administratorPassword;
+	}
+
+	public void setAdministratorPassword(String administratorPassword) {
+		this.administratorPassword = administratorPassword;
+	}
 }

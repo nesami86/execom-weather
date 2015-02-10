@@ -17,12 +17,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class WeatherQueryInit {
 
-	private static Integer DAY_IN_SEC = 86400;
 	private static Integer WEEK_IN_SEC = 604800;
-	private static Integer MONTH_IN_SEC = 2629744;
 	private static Integer YEAR_IN_SEC =  31536000;
 	private static Integer JAN_1_2015 = 1420070400;
-	private static Integer YEAR_AND_A_WEEK = 32161700;
+
 	@Autowired
 	JSONParser parser;
 
@@ -42,7 +40,7 @@ public class WeatherQueryInit {
 		cities.add(2867993); // Stuttgart
 		cities.add(745044);  // Istanbul
 
-		Integer toTime = JAN_1_2015 - 2*YEAR_IN_SEC; // krajnjeVreme
+		Integer toTime = JAN_1_2015 - 2*YEAR_IN_SEC;
 
 		Integer fromTimeX = 0;
 
@@ -71,17 +69,17 @@ public class WeatherQueryInit {
 				while((line = br.readLine()) != null){
 					jsonPoruka += line;
 				}
-				
+
 				//String[] stringArray = jsonPoruka.split("{\"message\"");
 				String[] stringArray = jsonPoruka.split("}]}");
-				
+
 				for(String s: stringArray){
-				parser.parser(s+"}]}", startDate, endDate);
+					parser.parser(s+"}]}", startDate, endDate);
 				}
-				}
+			}
 			toTime = fromTimeX;
 
 		}
 	}
-	
+
 }

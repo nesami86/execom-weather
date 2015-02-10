@@ -17,82 +17,82 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Table(name="weather", uniqueConstraints = @UniqueConstraint(columnNames={"date","city_id"}))
 public class Weather {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer weatherId;
-    
-    private long date;
-    private int temperature;
-    private int humidity;
-    private int pressure;
-    
-    @ManyToOne(fetch=FetchType.LAZY, cascade={ CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
-    @JoinColumn(name="city_id")
-    @JsonBackReference
-    private City city;
-    
-    public Weather() {
-        
-    }
-    
-    public Weather( long date, int temperature, int humidity, int pressure) {
-        super();
-        this.date = date;
-        this.temperature = temperature;
-        this.humidity = humidity;
-        this.pressure = pressure;
-    }
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer weatherId;
 
-    public Integer getWeatherId() {
-        return weatherId;
-    }
+	private long date;
+	private int temperature;
+	private int humidity;
+	private int pressure;
 
-    public void setWeatherId(Integer weatherId) {
-        this.weatherId = weatherId;
-    }
+	@ManyToOne(fetch=FetchType.LAZY, cascade={ CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
+	@JoinColumn(name="city_id")
+	@JsonBackReference
+	private City city;
 
-    public long getDate() {
-        return date;
-    }
+	public Weather() {
 
-    public void setDate(long date) {
-        this.date = date;
-    }
+	}
 
-    public int getTemperature() {
-        return temperature;
-    }
+	public Weather( long date, int temperature, int humidity, int pressure) {
+		super();
+		this.date = date;
+		this.temperature = temperature;
+		this.humidity = humidity;
+		this.pressure = pressure;
+	}
 
-    public void setTemperature(int temperature) {
-        this.temperature = temperature;
-    }
+	public Integer getWeatherId() {
+		return weatherId;
+	}
 
-    public int getHumidity() {
-        return humidity;
-    }
+	public void setWeatherId(Integer weatherId) {
+		this.weatherId = weatherId;
+	}
 
-    public void setHumidity(int humidity) {
-        this.humidity = humidity;
-    }
+	public long getDate() {
+		return date;
+	}
 
-    public int getPressure() {
-        return pressure;
-    }
+	public void setDate(long date) {
+		this.date = date;
+	}
 
-    public void setPressure(int pressure) {
-        this.pressure = pressure;
-    }
-    public City getCity() {
-        return city;
-    }
+	public int getTemperature() {
+		return temperature;
+	}
 
-    public void setCity(City city) {
-        this.city = city;
-    }
+	public void setTemperature(int temperature) {
+		this.temperature = temperature;
+	}
 
-    @Override
-    public String toString() {
-        return "Weather [weatherId=" + weatherId + ", date=" + date + ", temperature=" + temperature + ", humidity=" + humidity
-                + ", pressure=" + pressure + ", city=" + city + "]";
-    }
+	public int getHumidity() {
+		return humidity;
+	}
+
+	public void setHumidity(int humidity) {
+		this.humidity = humidity;
+	}
+
+	public int getPressure() {
+		return pressure;
+	}
+
+	public void setPressure(int pressure) {
+		this.pressure = pressure;
+	}
+	public City getCity() {
+		return city;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
+	}
+
+	@Override
+	public String toString() {
+		return "Weather [weatherId=" + weatherId + ", date=" + date + ", temperature=" + temperature + ", humidity=" + humidity
+				+ ", pressure=" + pressure + ", city=" + city + "]";
+	}
 }

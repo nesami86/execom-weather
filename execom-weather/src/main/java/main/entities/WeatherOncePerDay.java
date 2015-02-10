@@ -14,6 +14,7 @@ import javax.persistence.UniqueConstraint;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
+//@NamedQuery(name = WeatherOnceOerDay)
 @Table(name = "weatheronceperday", uniqueConstraints = @UniqueConstraint(columnNames = {
 		"date", "city_id" }))
 public class WeatherOncePerDay {

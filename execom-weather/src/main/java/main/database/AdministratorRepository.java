@@ -8,5 +8,5 @@ import org.springframework.stereotype.Component;
 @Component
 public interface AdministratorRepository extends CrudRepository<Administrator, Long> {
 
-    Administrator findByAdministratorUsername(String administratorUsername);
+	Administrator findByAdministratorUsername(String administratorUsername);
 }

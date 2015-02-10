@@ -3,15 +3,11 @@ package main.weatherApplication;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-//import java.util.Date;
-import java.util.TimeZone;
+import main.database.WeatherOncePerDayRepository;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -25,16 +21,20 @@ public class CurrentWeatherQuery {
 	@Autowired
 	JSONParser jsonParser;
 
+	@Autowired
+	WeatherOncePerDayRepository weatherOncePerDayRepository ;
+
 	private static String jsonPoruka = "";
 	private static Integer FIRST_JAN_2015 = 1420070400;
 
-	private static Integer DAY_IN_SEC = 86400;
 	private static Integer WEEK_IN_SEC = 604800;
-	private static Integer MONTH_IN_SEC = 2629744;
 
 	private Integer toTime = FIRST_JAN_2015;
-	private Integer fromTimeX = toTime + MONTH_IN_SEC;// 1420675200;
-	// private String cityID = "745044";
+	private Integer fromTimeX;
+
+	private Integer fromTime = (int) (System.currentTimeMillis() / 1000);
+
+	private Integer brIteracija = 0;
 
 	private static List<Integer> cities = new ArrayList<Integer>();
 
@@ -50,7 +50,25 @@ public class CurrentWeatherQuery {
 		cities.add(2867993); // Stuttgart
 		cities.add(745044); // Istanbul
 
-		for (int i = 0; i < 4; i++) {
+		Long datex = weatherOncePerDayRepository.findWeatherDate();
+
+		try{
+			if(datex.equals(null)){
+				System.out.println("NEMA VREDNOSTI U TABELI!!!!!");
+
+			}else{
+				System.out.println("###IMA VREDNOSTI U TABELI!!");
+				toTime = (int) (datex/1000l);
+			}
+		}catch(NullPointerException npE){
+			System.out.println("Nema podataka u bazi;");
+		}
+
+		brIteracija = (fromTime - toTime)/WEEK_IN_SEC;
+
+		System.out.println("BROJ ITERACIJA DO KRAJA:"+ brIteracija);
+
+		for (int i = 0; i < brIteracija; i++) {
 
 			fromTimeX = toTime + WEEK_IN_SEC;
 
@@ -101,9 +119,4 @@ public class CurrentWeatherQuery {
 		}
 	}
 
-	/*
-	 * public SimpleDateFormat formater (sd){
-	 * 
-	 * }
-	 */
 }

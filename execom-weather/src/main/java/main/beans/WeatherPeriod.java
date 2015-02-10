@@ -2,35 +2,35 @@ package main.beans;
 
 public class WeatherPeriod {
 
-    private String cityId;
-    private String startingDate;
-    private String endingDate;
-    
-    public WeatherPeriod() {
-        
-    }
+	private String cityId;
+	private String startingDate;
+	private String endingDate;
 
-    public String getCityId() {
-        return cityId;
-    }
+	public WeatherPeriod() {
 
-    public void setCityId(String cityId) {
-        this.cityId = cityId;
-    }
+	}
 
-    public String getStartingDate() {
-        return startingDate;
-    }
+	public String getCityId() {
+		return cityId;
+	}
 
-    public void setStartingDate(String startingDate) {
-        this.startingDate = startingDate;
-    }
+	public void setCityId(String cityId) {
+		this.cityId = cityId;
+	}
 
-    public String getEndingDate() {
-        return endingDate;
-    }
+	public String getStartingDate() {
+		return startingDate;
+	}
 
-    public void setEndingDate(String endingDate) {
-        this.endingDate = endingDate;
-    }
+	public void setStartingDate(String startingDate) {
+		this.startingDate = startingDate;
+	}
+
+	public String getEndingDate() {
+		return endingDate;
+	}
+
+	public void setEndingDate(String endingDate) {
+		this.endingDate = endingDate;
+	}
 }

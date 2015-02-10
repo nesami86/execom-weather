@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 public interface WeatherRepository extends Repository<Weather, Long>{
 
-    List<Weather> findByCity(City city);
-        
-    List<Weather> findByDateGreaterThan(Long date);
-    
-    List<Weather> findByDateLessThan(Long date);
-    
-    List<Weather> findByCityAndDateBetween(City city, Long date1, Long date2);
+	List<Weather> findByCity(City city);
+
+	List<Weather> findByDateGreaterThan(Long date);
+
+	List<Weather> findByDateLessThan(Long date);
+
+	List<Weather> findByCityAndDateBetween(City city, Long date1, Long date2);
 }

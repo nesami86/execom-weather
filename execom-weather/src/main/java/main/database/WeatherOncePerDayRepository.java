@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 public interface WeatherOncePerDayRepository extends Repository<WeatherOncePerDay, Long> {
 
-    WeatherOncePerDay findByCityAndDate(City city, long date);
-    
-    @Query("SELECT MAX(date) FROM WeatherOncePerDay")
-    public Long findWeatherDate();
+	WeatherOncePerDay findByCityAndDate(City city, long date);
+
+	@Query("SELECT MAX(date) FROM WeatherOncePerDay")
+	public Long findWeatherDate();
 }

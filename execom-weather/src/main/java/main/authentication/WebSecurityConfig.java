@@ -14,33 +14,33 @@ import org.springframework.security.config.annotation.web.servlet.configuration.
 @Configuration
 @EnableWebMvcSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-        
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-        
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-            .csrf().disable()
-            .authorizeRequests()
-                .antMatchers("/", "/weather/getPeriod", "/weather/getForecast").permitAll()
-                .anyRequest().authenticated()
-                .and()
-            .formLogin()
-                .loginPage("/login")
-                .permitAll()
-                .and()
-            .logout()
-                .permitAll();
-    }
-    
-    /**
-     * Authenticates administrators (from database)
-     */
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-        auth.authenticationProvider(daoAuthenticationProvider);
-    }
+
+	@Autowired
+	private UserDetailsServiceImpl userDetailsService;
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+		.csrf().disable()
+		.authorizeRequests()
+		.antMatchers("/", "/weather/getPeriod", "/weather/getForecast").permitAll()
+		.anyRequest().authenticated()
+		.and()
+		.formLogin()
+		.loginPage("/login")
+		.permitAll()
+		.and()
+		.logout()
+		.permitAll();
+	}
+
+	/**
+	 * Authenticates administrators (from database)
+	 */
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) {
+		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+		daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+		auth.authenticationProvider(daoAuthenticationProvider);
+	}
 }
