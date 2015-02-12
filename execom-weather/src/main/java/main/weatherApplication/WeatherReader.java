@@ -14,8 +14,12 @@ import main.entities.City;
 import main.entities.Weather;
 import main.entities.WeatherOncePerDay;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.google.gson.JsonArray;
 
 /**
  * Gets weather data from database
@@ -42,6 +46,22 @@ public class WeatherReader {
 		return getDate(date).getTimeInMillis() + 3600000;
 	}
 
+	public String getWeatherReportsJSON(String cityId, String startingDate, String endingDate){
+		System.out.println("CityID je!!!:"+cityId);
+		String retValue = "it did not work";
+		City city = cityRepository.findByCityId((Integer.parseInt(cityId)));
+		JSONArray jsonArray = new JSONArray(weatherRepository.findByCityAndDateBetween(city, Long.parseLong(startingDate),
+				Long.parseLong(endingDate)));
+		try {
+			 retValue = jsonArray.toString(2);
+		
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return retValue;
+		}
+	
 	public Calendar getDate(String date) {
 		Calendar calendar = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -63,7 +83,7 @@ public class WeatherReader {
 		}        
 		return endingDate;
 	}
-
+	
 	public List<WeatherOncePerDay> getWeatherForecast(WeatherPeriod weatherPeriod) {    // ovo pozivamo sa html stranice
 		List<WeatherOncePerDay> daysPredicted = new ArrayList<WeatherOncePerDay>();  //init za listu predikcija
 
@@ -77,7 +97,33 @@ public class WeatherReader {
 			WeatherOncePerDay dailyWeather = makeForecast(city, day.getTimeInMillis());//pozivamo fuju makeForecast
 			daysPredicted.add(dailyWeather);	// rezultat dodamo u listu predikcija
 		}
+		
 		return daysPredicted;  // vraca listu WeatherOncePerDay objekata
+	}
+	
+	public String getWeatherForecastJSON(String cityId, String startingDate, String endingDate) {    // ovo pozivamo sa html stranice
+		List<WeatherOncePerDay> daysPredicted = new ArrayList<WeatherOncePerDay>();  //init za listu predikcija
+		String returnJson="";
+		List<Calendar> days = getDaysForPrediction(Long.parseLong(startingDate), //formiramo listu Calendar parametara na osnovu ucitanih podataka iz forme 
+				Long.parseLong(endingDate));
+
+		City city = cityRepository.findByCityId(Integer.parseInt(cityId)); //formiramo City objekat na osnovu
+																							  //ulaznog parametara sa forme
+	//	List<JsonArray> testJSONARRAy ;
+		for (Calendar day : days) {      //Za listu Calendar objekata sto smo pravili 
+			WeatherOncePerDay dailyWeather = makeForecast(city, day.getTimeInMillis());//pozivamo fuju makeForecast
+		//	testJSONARRAy.add(new JsonArray(makeForecast(city, day.getTimeInMillis())));
+			daysPredicted.add(dailyWeather);	// rezultat dodamo u listu predikcija
+		}
+		JSONArray returnJArray = new JSONArray(daysPredicted);
+		
+		try {
+			returnJson = returnJArray.toString(2);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return returnJson;  // vraca listu WeatherOncePerDay objekata
 	}
 
 	public List<Calendar> getDaysForPrediction(Long startDate, Long endDate) {

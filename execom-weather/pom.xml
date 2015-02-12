@@ -31,7 +31,7 @@
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 
-		
+
 
 		<!-- Gabor - http client -->
 		<dependency>
@@ -46,10 +46,15 @@
 			<version>2.2.4</version>
 		</dependency>
 		<dependency>
-		<groupId>joda-time</groupId>
-		<artifactId>joda-time</artifactId>
-		<version>2.7</version>
-</dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20090211</version>
+		</dependency>
 	</dependencies>
 
 </project>
