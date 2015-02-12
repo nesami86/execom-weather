@@ -46,11 +46,14 @@ public class WebController extends WebControllerAddMethods {
     @RequestMapping("/weather/getData")
     public void getWeatherHistory() throws IllegalStateException, IOException {
         weatherQueryInit.returnWeather();
+        
     }
     
     @RequestMapping("/weather/getFreshData")
-    public void getFreshWeatherData() throws IllegalStateException, IOException {
+    public String getFreshWeatherData() throws IllegalStateException, IOException {
         currentWeatherQuery.currentQuerry();
+        System.out.println("kraj!");
+        return "index";
     }
     
     @RequestMapping("/weather/getPeriod")

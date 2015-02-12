@@ -38,8 +38,8 @@
     function displayReport(a) {
         for (var i = 0; i < a.length; i++) {
             var date = new Date(a[i].date).toString().substring(0,21);
-            var temperature = Math.round(a[i].temperature);           
-            fillWeatherTable(date, temperature);
+                    
+            fillWeatherTable(date, a[i].temperature);
         }
         $("#weatherReportTable").show();
     }       

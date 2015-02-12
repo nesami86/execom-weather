@@ -29,16 +29,16 @@ public class WeatherQueryInit {
 
 	@SuppressWarnings("resource")
 	public void returnWeather() throws IllegalStateException, IOException{
-		cities.add(764679); // Minsk
+		//cities.add(764679); // Minsk
 		cities.add(524901); // MOSKVA
-		cities.add(792680); // BEOGRAD
+		/*cities.add(792680); // BEOGRAD
 		cities.add(2969284); // Vienne
 		cities.add(3996933); // Madrid
 		cities.add(4219762); // Rome
 		cities.add(2673730); // Stockholm
 		cities.add(5245497); // Berlin
 		cities.add(2867993); // Stuttgart
-		cities.add(745044);  // Istanbul
+		cities.add(745044);*/  // Istanbul
 
 		Integer toTime = JAN_1_2015 - 2*YEAR_IN_SEC;
 
