@@ -46,9 +46,6 @@ public class JSONParser {
 
 			City city = new City(cityID, cod);
 
-			System.out
-			.println("  PODACI O GRADU NA OSNOVU PARSIRANIH PODATAKA : "
-					+ city);
 			JsonArray measurements = null;
 
 			measurements = jsonParser.parse(jsonPoruka)
@@ -80,45 +77,22 @@ public class JSONParser {
 				JsonObject main = (JsonObject) listEl.getAsJsonObject().get(
 						"main");
 
-				int temp = -1000;
+				int temp = main.get("temp").getAsInt() - 273;
 
-				try{
-					temp = main.get("temp").getAsInt() - 273;
-				}catch(NullPointerException npe){
-					System.out.println("\nNo value returned for temperature.");
-				}
-
-				int humidity = -100; // Initial value if we don't get return value for humidity;
+				int humidity = -100; 
 
 				try{
 					humidity = main.get("humidity").getAsInt();
 				} catch(NullPointerException npe){
-					System.out.println("\nNo value returned for humidity.");
+					//	System.out.println("\nNo value returned for humidity.");
 				}
 
-				int pressure = -1000;
+				int	pressure = main.get("pressure").getAsInt();
 
-				try{
-					pressure = main.get("pressure").getAsInt();
-				} catch(NullPointerException npe){
-					System.out.println("\nNo value returned for pressure.");
-				}
+				int	temp_min = main.get("temp_min").getAsInt() - 273;
 
-				int temp_min = -1000;
+				int	temp_max = main.get("temp_max").getAsInt() - 273;
 
-				try{
-					temp_min = main.get("temp_min").getAsInt() - 273;
-				} catch(NullPointerException npe){
-					System.out.println("\nNo value returned for minimum temperature.");
-				}
-
-				int temp_max = -1000; 
-
-				try{
-					temp_max = main.get("temp_max").getAsInt() - 273;
-				} catch(NullPointerException npe){
-					System.out.println("\nNo value returned for maximum temperature.");
-				}
 
 				JsonElement dtj = listEl.getAsJsonObject().get("dt");
 
@@ -186,23 +160,15 @@ public class JSONParser {
 				city.addWeather(wPom);
 			}
 
-			System.out.println("ID grada" + city.getId());
-
 			for (WeatherOncePerDay wPom : weeklyExtreme) {
 				city.AddWeatherOncePerDay(wPom);
 			}
-			try{
-				cityRepository.save(city);
-			}catch(Exception e){
-				System.out.println("MySQLIntegrityConstraintViolationException: Duplicate entry for key");
-			}
-		}catch(IllegalStateException isE){
-			System.out.println("IllegalStateException: Not a JSON Object: failed");
-		}catch(JsonSyntaxException mjE){
-			mjE.printStackTrace();
+
+			cityRepository.save(city);
+
 		}
-		catch(JsonParseException jpE){
-			jpE.printStackTrace();
+		catch(Exception e){
+			//e.printStackTrace();
 		}
 
 	}
@@ -223,6 +189,9 @@ public class JSONParser {
 
 			JsonArray measurements = jsonParser.parse(jsonPoruka)
 					.getAsJsonObject().getAsJsonArray("list");
+
+
+			List<Weather> weatherx = new ArrayList<Weather>();
 
 			DateTime dayOne = startDate;
 			DateTime dayTwo = startDate.plusDays(1);
@@ -247,18 +216,35 @@ public class JSONParser {
 				JsonObject main = (JsonObject) listEl.getAsJsonObject().get(
 						"main");
 
-				
-				
+
+
 				int temp_min = main.get("temp_min").getAsInt() - 273;
 				int temp_max = main.get("temp_max").getAsInt() - 273;
 
-				
-				
+
+				int temp = main.get("temp").getAsInt() - 273;
+
+				int humidity = -100; 
+
+				try{
+					humidity = main.get("humidity").getAsInt();
+				} catch(NullPointerException npe){
+					//	System.out.println("\nNo value returned for humidity.");
+				}
+
+				int	pressure = main.get("pressure").getAsInt();
+
+
+
 				JsonElement dtj = listEl.getAsJsonObject().get("dt");
 
 				Long dt = dtj.getAsLong();
+				dt = dt * 1000L;
+				Weather wx = new Weather(dt, temp, humidity, pressure);
 
-				DateTime testDate = new DateTime(dt * 1000L);
+				DateTime testDate = new DateTime(dt);
+
+				weatherx.add(wx);
 
 				if (testDate.isAfter(dayOne) && testDate.isBefore(dayTwo)) {
 					WeatherOncePerDay weatherOncePerDay = new WeatherOncePerDay(
@@ -313,6 +299,10 @@ public class JSONParser {
 			weeklyExtreme.add(this.maxMinForDay(daySevenList));
 
 
+			for (Weather wPom : weatherx) {
+				city.addWeather(wPom);
+			}
+
 			for (WeatherOncePerDay wPom : weeklyExtreme) {
 				city.AddWeatherOncePerDay(wPom);
 
@@ -321,7 +311,7 @@ public class JSONParser {
 			cityRepository.save(city);
 
 		} catch (Exception e) {
-			System.out.println("The message that we got is not a json message");
+			//System.out.println("The message that we got is not a json message");
 		}
 	}
 

@@ -39,16 +39,16 @@ public class CurrentWeatherQuery {
 	private static List<Integer> cities = new ArrayList<Integer>();
 
 	public void currentQuerry() {
-		//cities.add(764679); // Minsk
+		cities.add(764679); // Minsk
 		cities.add(524901); // MOSKVA
-		/*	cities.add(792680); // BEOGRAD
-		cities.add(2969284); // Vienne
-		cities.add(3996933); // Madrid
-		cities.add(4219762); // Rome
+		cities.add(2661604); // BASEL
+		cities.add(2761369); // Vienne
+		cities.add(3117735); // Madrid
+		cities.add(264371);  // Athens
 		cities.add(2673730); // Stockholm
-		cities.add(5245497); // Berlin
-		cities.add(2867993); // Stuttgart
-		cities.add(745044); */// Istanbul
+		cities.add(2950159); // Berlin
+		cities.add(2825297); // Stuttgart
+		cities.add(745044);  // Istanbul
 
 		Long datex = weatherOncePerDayRepository.findWeatherDate();
 
@@ -58,11 +58,15 @@ public class CurrentWeatherQuery {
 
 			}else{
 				System.out.println("###IMA VREDNOSTI U TABELI!!");
-				toTime = (int) (datex/1000l);
+				if((datex/1000l)<FIRST_JAN_2015)
+					toTime = FIRST_JAN_2015;
+				else
+					toTime = (int) (datex/1000l);
 			}
 		}catch(NullPointerException npE){
 			System.out.println("Nema podataka u bazi;");
 		}
+
 
 		brIteracija = (fromTime - toTime)/WEEK_IN_SEC;
 
@@ -100,8 +104,6 @@ public class CurrentWeatherQuery {
 							.getEntity().getContent()));
 
 					jsonPoruka = br.readLine();
-
-					System.out.println(jsonPoruka);
 
 					jsonParser.CurrentMesurementParser(jsonPoruka, startDate,
 							endDate);

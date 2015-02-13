@@ -47,6 +47,7 @@ public class WebController extends WebControllerAddMethods {
     @RequestMapping("/weather/getData")
     public String getWeatherHistory() throws IllegalStateException, IOException {
         weatherQueryInit.returnWeather();
+        System.out.println("kraj!");
         return "index";
     }
     
@@ -61,6 +62,8 @@ public class WebController extends WebControllerAddMethods {
     public @ResponseBody List<Weather> getWeatherPeriod(@RequestBody WeatherPeriod weatherPeriod) {
         return weatherReader.getWeatherReports(weatherPeriod);
     }
+    
+   
     
     @RequestMapping("/weather/getPeriodJson")
     public @ResponseBody String getWeatherPeriodJSON(@RequestParam("cityId") String cityId,@RequestParam("startingDate") String startingDate,@RequestParam("endingDate") String endingDate) {

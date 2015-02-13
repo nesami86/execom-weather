@@ -41,6 +41,7 @@ public class WeatherReader {
 		return weatherRepository.findByCityAndDateBetween(city, getUnixTime(weatherPeriod.getStartingDate()),
 				getUnixTime(weatherPeriod.getEndingDate()));
 	}
+	
 
 	public long getUnixTime(String date) {
 		return getDate(date).getTimeInMillis() + 3600000;
@@ -84,36 +85,36 @@ public class WeatherReader {
 		return endingDate;
 	}
 	
-	public List<WeatherOncePerDay> getWeatherForecast(WeatherPeriod weatherPeriod) {    // ovo pozivamo sa html stranice
-		List<WeatherOncePerDay> daysPredicted = new ArrayList<WeatherOncePerDay>();  //init za listu predikcija
+	public List<WeatherOncePerDay> getWeatherForecast(WeatherPeriod weatherPeriod) {    
+		List<WeatherOncePerDay> daysPredicted = new ArrayList<WeatherOncePerDay>();  
 
-		List<Calendar> days = getDaysForPrediction(getUnixTime(weatherPeriod.getStartingDate()), //formiramo listu Calendar parametara na osnovu ucitanih podataka iz forme 
+		List<Calendar> days = getDaysForPrediction(getUnixTime(weatherPeriod.getStartingDate()),  
 				getUnixTime(weatherPeriod.getEndingDate()));
 
-		City city = cityRepository.findByCityId(Integer.parseInt(weatherPeriod.getCityId())); //formiramo City objekat na osnovu
-																							  //ulaznog parametara sa forme
+		City city = cityRepository.findByCityId(Integer.parseInt(weatherPeriod.getCityId())); 
+																							  
 
-		for (Calendar day : days) {      //Za listu Calendar objekata sto smo pravili 
-			WeatherOncePerDay dailyWeather = makeForecast(city, day.getTimeInMillis());//pozivamo fuju makeForecast
-			daysPredicted.add(dailyWeather);	// rezultat dodamo u listu predikcija
+		for (Calendar day : days) {    
+			WeatherOncePerDay dailyWeather = makeForecast(city, day.getTimeInMillis());
+			daysPredicted.add(dailyWeather);	
 		}
 		
-		return daysPredicted;  // vraca listu WeatherOncePerDay objekata
+		return daysPredicted;  
 	}
 	
-	public String getWeatherForecastJSON(String cityId, String startingDate, String endingDate) {    // ovo pozivamo sa html stranice
-		List<WeatherOncePerDay> daysPredicted = new ArrayList<WeatherOncePerDay>();  //init za listu predikcija
+	public String getWeatherForecastJSON(String cityId, String startingDate, String endingDate) {  
+		List<WeatherOncePerDay> daysPredicted = new ArrayList<WeatherOncePerDay>(); 
 		String returnJson="";
-		List<Calendar> days = getDaysForPrediction(Long.parseLong(startingDate), //formiramo listu Calendar parametara na osnovu ucitanih podataka iz forme 
+		List<Calendar> days = getDaysForPrediction(Long.parseLong(startingDate),  
 				Long.parseLong(endingDate));
 
-		City city = cityRepository.findByCityId(Integer.parseInt(cityId)); //formiramo City objekat na osnovu
-																							  //ulaznog parametara sa forme
-	//	List<JsonArray> testJSONARRAy ;
-		for (Calendar day : days) {      //Za listu Calendar objekata sto smo pravili 
-			WeatherOncePerDay dailyWeather = makeForecast(city, day.getTimeInMillis());//pozivamo fuju makeForecast
-		//	testJSONARRAy.add(new JsonArray(makeForecast(city, day.getTimeInMillis())));
-			daysPredicted.add(dailyWeather);	// rezultat dodamo u listu predikcija
+		City city = cityRepository.findByCityId(Integer.parseInt(cityId)); 
+																							
+	
+		for (Calendar day : days) {    
+			WeatherOncePerDay dailyWeather = makeForecast(city, day.getTimeInMillis());
+		
+			daysPredicted.add(dailyWeather);	
 		}
 		JSONArray returnJArray = new JSONArray(daysPredicted);
 		
@@ -123,49 +124,49 @@ public class WeatherReader {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return returnJson;  // vraca listu WeatherOncePerDay objekata
+		return returnJson;  
 	}
 
 	public List<Calendar> getDaysForPrediction(Long startDate, Long endDate) {
-		List<Calendar> days = new ArrayList<Calendar>(); // iniciramo listu objekata tipa Calendar
+		List<Calendar> days = new ArrayList<Calendar>(); 
 
-		for (long date = startDate; date < endDate; date += 86400000) { // povecavamo counter za jedan dan u sekundama
-			Calendar day = Calendar.getInstance(); 						// pravimo objekat tipa canlendar
-			day.setTimeInMillis(date);									//setujemo mu date u milisekundama
-			days.add(day);												//dodamo ga u listu gradova
+		for (long date = startDate; date < endDate; date += 86400000) { 
+			Calendar day = Calendar.getInstance(); 						
+			day.setTimeInMillis(date);									
+			days.add(day);												
 		}
 		return days;
 	}
 
 	public WeatherOncePerDay makeForecast(City city, long date) {
-		List<WeatherOncePerDay> forecastData = getForecastData(city, date);  //ovde pozivamo get forecast za ulazne parametre
+		List<WeatherOncePerDay> forecastData = getForecastData(city, date); 
 		int tempMin = 0;
 		int tempMax = 0;
 		int counter = 1;
 
-		for (int i=0; i<forecastData.size(); i++) {          // U petlji prelazimo kroz elemente forecast liste.   
-			tempMin += forecastData.get(i).getTempMin();	 // formiramo sumu min temperatura za trazen period.
-			tempMax += forecastData.get(i).getTempMax();	 // formiramo sumu max temperatura za trazen period.
-			counter = i + 1;								 // brojac koji cemo koristiti u racunu.
+		for (int i=0; i<forecastData.size(); i++) {           
+			tempMin += forecastData.get(i).getTempMin();	
+			tempMax += forecastData.get(i).getTempMax();	
+			counter = i + 1;								 
 		}
-		tempMin = Math.round(tempMin/counter);				 // izracunamo srednju vrednost za min temperaturu
-		tempMax = Math.round(tempMax/counter);				 // izracunamo srednju vrednost za max temperaturu
+		tempMin = Math.round(tempMin/counter);				
+		tempMax = Math.round(tempMax/counter);			
 
-		return new WeatherOncePerDay(tempMin, tempMax, date); //wratimo objekat tipa WeatherOncePerDay.
+		return new WeatherOncePerDay(tempMin, tempMax, date); 
 	}
 
 	public List<WeatherOncePerDay> getForecastData(City city, long date) {		
-		List<WeatherOncePerDay> forecastData = new ArrayList<WeatherOncePerDay>(); // formiramo listu objekata tipa weatherOncePerDay
-		Calendar calendar = Calendar.getInstance();								   // kreiramo kalendar objekat
-		calendar.setTimeInMillis(date);											   // setujemo mu datum
+		List<WeatherOncePerDay> forecastData = new ArrayList<WeatherOncePerDay>(); 
+		Calendar calendar = Calendar.getInstance();								  
+		calendar.setTimeInMillis(date);											   
 
-		for (int i=0; i<10; i++) {								// citamo deset godina unazad
-			WeatherOncePerDay forecastDay = dailyWeatherRepository.findByCityAndDate(city, calendar.getTimeInMillis()); //citamo iz baze dnevni min i max
+		for (int i=0; i<10; i++) {								
+			WeatherOncePerDay forecastDay = dailyWeatherRepository.findByCityAndDate(city, calendar.getTimeInMillis()); 
 
-			if (forecastDay != null) {			// ako iscitana vrednost nije null onda:
-				forecastData.add(forecastDay);	// dodaj forecastDay u listu forecast data
+			if (forecastDay != null) {			
+				forecastData.add(forecastDay);	
 			}
-			calendar.add(Calendar.YEAR, -1);	// umanjujemu godinu za godinu dana
+			calendar.add(Calendar.YEAR, -1);
 		} 
 		return forecastData;
 	}

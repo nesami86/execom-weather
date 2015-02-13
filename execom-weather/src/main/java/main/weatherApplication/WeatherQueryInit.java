@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.database.WeatherRepository;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -23,28 +25,52 @@ public class WeatherQueryInit {
 
 	@Autowired
 	JSONParser parser;
+	
+	@Autowired
+	WeatherRepository weatherReposirory;
 
+	private Integer brIteracija = 0;
 	private static String jsonPoruka ="";
 	private static List<Integer> cities = new ArrayList<Integer>();
 
+	
+	
+	
 	@SuppressWarnings("resource")
 	public void returnWeather() throws IllegalStateException, IOException{
-		//cities.add(764679); // Minsk
+		cities.add(764679); // Minsk
 		cities.add(524901); // MOSKVA
-		/*cities.add(792680); // BEOGRAD
-		cities.add(2969284); // Vienne
-		cities.add(3996933); // Madrid
-		cities.add(4219762); // Rome
+		cities.add(2661604); // BASEL
+		cities.add(2761369); // Vienne
+		cities.add(3117735); // Madrid
+		cities.add(264371); // Athens
 		cities.add(2673730); // Stockholm
-		cities.add(5245497); // Berlin
-		cities.add(2867993); // Stuttgart
-		cities.add(745044);*/  // Istanbul
-
+		cities.add(2950159); // Berlin
+		cities.add(2825297); // Stuttgart
+		cities.add(745044);  // Istanbul
+		Long datex = weatherReposirory.findWeatherDate();
+		
+		
 		Integer toTime = JAN_1_2015 - 2*YEAR_IN_SEC;
 
 		Integer fromTimeX = 0;
 
-		for (int i = 0; i < 104; i++) {
+		try{
+			if(datex.equals(null)){
+				System.out.println("NEMA VREDNOSTI U TABELI!!!!!");
+
+			}else{
+				System.out.println("###IMA VREDNOSTI U TABELI!!");
+				toTime = (int) (datex/1000l);
+			}
+		}catch(NullPointerException npE){
+			System.out.println("Nema podataka u bazi;");
+		}
+
+		brIteracija = (JAN_1_2015 - toTime)/WEEK_IN_SEC;
+		System.out.println(brIteracija);
+		
+		for (int i = 0; i < brIteracija; i++) {
 
 			fromTimeX = toTime + WEEK_IN_SEC;
 
@@ -55,8 +81,11 @@ public class WeatherQueryInit {
 
 				@SuppressWarnings("deprecation")
 				HttpClient client = new DefaultHttpClient();
-
-				String query = "http://api.openweathermap.org/data/2.5/history/city?id="+x+"&type=day&start=" + toTime + "&end=" + fromTimeX
+				
+				Integer fromTimeXHelp = fromTimeX - 3600;
+				
+				
+				String query = "http://api.openweathermap.org/data/2.5/history/city?id="+x+"&type=day&start=" + toTime + "&end=" + fromTimeXHelp
 						+ "&APPID=c63f2ee343e3f8ce3a7e452d8f9ad08d";
 
 				HttpGet request = new HttpGet(query);
@@ -66,16 +95,10 @@ public class WeatherQueryInit {
 						response.getEntity().getContent()));
 
 				String line = null;
-				while((line = br.readLine()) != null){
-					jsonPoruka += line;
-				}
-
-				//String[] stringArray = jsonPoruka.split("{\"message\"");
-				String[] stringArray = jsonPoruka.split("}]}");
-
-				for(String s: stringArray){
-					parser.parser(s+"}]}", startDate, endDate);
-				}
+		
+				jsonPoruka = br.readLine();
+				
+				parser.parser(jsonPoruka, startDate, endDate);
 			}
 			toTime = fromTimeX;
 
