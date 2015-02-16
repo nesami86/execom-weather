@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import main.beans.WeatherPeriod;
-import main.database.AdministratorRepository;
 import main.database.CityRepository;
 import main.entities.Weather;
 import main.entities.WeatherOncePerDay;
@@ -23,8 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class WebController extends WebControllerAddMethods {
 
-    @Autowired
-    private AdministratorRepository adminRepo;
+   
     
     @Autowired
     private CityRepository cityRepository;

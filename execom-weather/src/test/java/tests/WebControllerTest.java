@@ -1,12 +1,16 @@
 package tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import main.WebController;
 import main.beans.WeatherPeriod;
-import main.entities.Administrator;
 import main.entities.City;
 import main.entities.Weather;
 import main.entities.WeatherOncePerDay;
@@ -15,7 +19,6 @@ import main.weatherApplication.JSONParser;
 import main.weatherApplication.WeatherQueryInit;
 import main.weatherApplication.WeatherReader;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +27,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.ui.Model;
-
-import static org.junit.Assert.assertEquals;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestBeans.class, WebControllerTest.TestConfig.class})
@@ -69,9 +66,6 @@ public class WebControllerTest {
     
     @Autowired
     private Model model;
-    
-    @Autowired
-    private Administrator admin;
     
     @Autowired
     private City city;

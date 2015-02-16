@@ -1,0 +1,30 @@
+<persistence version="2.0"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/persistence">
+
+	<persistence-unit transaction-type="RESOURCE_LOCAL"
+		name="testdb">
+
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+
+
+		<class>main.entities.Weather</class>
+		<class>main.entities.City</class>
+		<class>main.entities.WeatherOncePerDay</class>
+
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+
+		<properties>
+
+			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+
+			<property name="hibernate.hbm2ddl.auto" value="create" />
+
+		
+
+		</properties>
+
+	</persistence-unit>
+
+</persistence>

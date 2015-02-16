@@ -147,14 +147,20 @@ public class JSONParser {
 				}
 
 			}
-
-			weeklyExtreme.add(this.maxMinForDay(dayOneList));
-			weeklyExtreme.add(this.maxMinForDay(dayTwoList));
-			weeklyExtreme.add(this.maxMinForDay(dayTreeList));
-			weeklyExtreme.add(this.maxMinForDay(dayFourList));
-			weeklyExtreme.add(this.maxMinForDay(dayFiveList));
-			weeklyExtreme.add(this.maxMinForDay(daySixList));
-			weeklyExtreme.add(this.maxMinForDay(daySevenList));
+			if(dayOneList.size()>0)
+				weeklyExtreme.add(this.maxMinForDay(dayOneList));
+			if(dayTwoList.size()>0)
+				weeklyExtreme.add(this.maxMinForDay(dayTwoList));
+			if(dayTreeList.size()>0)		//Tree je drvo
+				weeklyExtreme.add(this.maxMinForDay(dayTreeList));
+			if(dayFourList.size()>0)
+				weeklyExtreme.add(this.maxMinForDay(dayFourList));
+			if(dayFiveList.size()>0)
+				weeklyExtreme.add(this.maxMinForDay(dayFiveList));
+			if(daySixList.size()>0)
+				weeklyExtreme.add(this.maxMinForDay(daySixList));
+			if(daySevenList.size()>0)
+				weeklyExtreme.add(this.maxMinForDay(daySevenList));
 
 			for (Weather wPom : weatherx) {
 				city.addWeather(wPom);
@@ -163,12 +169,12 @@ public class JSONParser {
 			for (WeatherOncePerDay wPom : weeklyExtreme) {
 				city.AddWeatherOncePerDay(wPom);
 			}
-
-			cityRepository.save(city);
+			
+				cityRepository.save(city);
 
 		}
 		catch(Exception e){
-			//e.printStackTrace();
+		//	e.printStackTrace();
 		}
 
 	}

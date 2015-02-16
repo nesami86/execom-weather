@@ -79,7 +79,7 @@ public class WeatherReaderTest {
     
     @Test
     public void getUnixTimeTest() {
-        assertEquals(1423090800000L, weatherReader.getUnixTime("2015-02-05"));
+        assertEquals(1423094400000L, weatherReader.getUnixTime("2015-02-05"));
     }
     
     @Test
